@@ -53,4 +53,8 @@ Route::prefix('siswa')->group(function () {
     Route::get('/nilai', function () {
         return view('siswa/nilai');
     });
+
+    Route::get('/profil', function () {
+        return view('siswa/profil');
+    });
 });
