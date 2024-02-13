@@ -13,10 +13,10 @@
         <div class="card mt-3 py-2" style="border-radius: 1.5rem">
             <div class="card-body px-5 py-3">
                 <div class="row d-flex align-items-center">
-                    <div class="col-4">
+                    <div class="col-3">
                         <img style="width: 100px; height: 100px" class="rounded-circle" src="https://via.placeholder.com/100x100" />
                     </div>
-                    <div class="col-8 text-left ml-n5">
+                    <div class="col-9 text-left ml-n3">
                         <h4 class="card-title font-weight-bold mb-0" style="color: #0F3077">Refal Purnama Putra</h5>
                         <p style="color: #565656">RefalPurnama@gmail.com</p>
                         <span style="color: #565656">

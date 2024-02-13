@@ -36,7 +36,7 @@
                             Pada suatu malam ketika Anda sedang sibuk bekerja, anak Anda sedang belajar di kamarnya, dan istri Anda sedang memasak untuk hidangan malam keluarga. Tiba-tiba listrik di rumah Anda padam sehingga membuat anak dan istri Anda panik, yang akan Anda lakukan adalah ....
                         </p>
                     </div>
-                    <div class="col-12 d-flex align-items-center" style="background: #4FA7F9;">
+                    <div class="col-12 d-flex align-items-center" style="background: #FF4D3D;">
                         <p class="mt-3">A. Berinisiatif mencari penerangan agar anak saya tetap bisa belajar dan istri saya juga bisa melanjutkan masak dengan tenang</p>
                     </div>
                     <div class="col-12 d-flex align-items-center">
@@ -50,7 +50,7 @@
                         <p class="mt-3">D. Tetap tenang dan menyuruh istri untuk menyalakan penerangan alternatif. Istri yang sedang berada di dapur tentu akan lebih dekat
                             dengan penerangan alternatif</p>
                     </div>
-                    <div class="col-12 d-flex align-items-center mb-5">
+                    <div class="col-12 d-flex align-items-center mb-5" style="background: #4FA7F9;">
                         <p class="mt-3">E.  Saya akan mencari penerangan bila tidak ada satupun yang berusaha mencari penerangan alternatif</p>
                     </div>
                     <div class="col-12 d-flex mb-5">
@@ -69,7 +69,11 @@
                                 <?php
                                     for ($i=0; $i < 35; $i++) {
                                 ?>
+                                @if ($i==30)
+                                    <button class="btn btn-sm btn-danger mb-1" style="width: 36px">{{ $i+1 }}</button>
+                                @else
                                     <button class="btn btn-sm btn-primary mb-1" style="width: 36px">{{ $i+1 }}</button>
+                                @endif
                                 <?php
                                     }
                                 ?>

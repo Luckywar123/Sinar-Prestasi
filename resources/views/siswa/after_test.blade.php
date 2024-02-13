@@ -10,7 +10,7 @@
 
 @section('content')
     <div class="content w-50">
-        <div class="card rounded-5 mt-3 py-2">
+        <div class="card rounded-5 mt-3 py-2" style="border-radius: 1.5rem">
             <div class="card-body px-5 py-3">
                 <h3 class="card-title font-weight-bold my-3" style="color: #0F3077">Refal Purnama Putra</h5>
 

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light py-3 px-5" style="background-color: #5DB6FA;">
     <a class="navbar-brand ml-auto" href="#">
-        <img src="{{ asset('assets/logo.png') }}" width="50" height="50" alt="Logo">
+        <img src="{{ asset('assets/logo.png') }}" width="36" height="36" alt="Logo">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

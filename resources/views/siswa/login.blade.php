@@ -14,9 +14,9 @@
 
 @section('content')
     <div class="content w-50">
-        <div class="card rounded-5 mt-3 py-2">
+        <div class="card mt-3 py-2" style="border-radius: 1rem">
             <div class="card-body px-5 py-3">
-                <h3 class="card-title font-weight-bold my-5" style="color: #0F3077">Selamat Datang</h5>
+                <h3 class="card-title font-weight-bold my-5" style="color: #0F3077">Selamat Datang</h3>
 
                     <form>
                         <div class="form-group row mb-4">

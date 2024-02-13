@@ -58,3 +58,17 @@ Route::prefix('siswa')->group(function () {
         return view('siswa/profil');
     });
 });
+
+Route::prefix('guru')->group(function () {
+    Route::get('/rekap', function () {
+        return view('guru/rekap');
+    });
+
+    Route::get('/data', function () {
+        return view('guru/data');
+    });
+
+    Route::get('/statistik', function () {
+        return view('guru/statistik');
+    });
+});
