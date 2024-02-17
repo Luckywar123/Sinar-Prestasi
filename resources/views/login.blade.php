@@ -18,20 +18,21 @@
             <div class="card-body px-5 py-3">
                 <h3 class="card-title font-weight-bold my-5" style="color: #0F3077">Selamat Datang</h3>
 
-                    <form>
+                    <form id="formAuthentication" action="{{ route('authenticate') }}" method="POST">
+                        @csrf
                         <div class="form-group row mb-4">
-                            <label for="id_pengguna" class="col-sm-3 col-form-label text-right">ID Pengguna</label>
+                            <label for="username" class="col-sm-3 col-form-label text-right">ID Pengguna</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control form-control-lg" id="id_pengguna" placeholder="Username">
+                                <input type="text" class="form-control form-control-md" id="username" name="username" placeholder="Username">
                             </div>
                         </div>
-                        <div class="form-group row mb-5">
+                        <div class="form-group row mb-2">
                             <label for="password" class="col-sm-3 col-form-label text-right">Password</label>
                             <div class="col-sm-9 mb-5">
-                                <input type="password" class="form-control form-control-lg" id="password" placeholder="Password">
+                                <input type="password" class="form-control form-control-md" id="password" name="password" placeholder="Password">
                             </div>
                         </div>
-                        <div class="form-group row mt-5">
+                        <div class="form-group row">
                             <div class="col-sm-12">
                                 <button type="submit" class="btn btn-primary form-control" style="background-color: #5DB6FA; color: #0F3077">Login</button>
                             </div>

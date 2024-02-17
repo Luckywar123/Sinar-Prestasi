@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,15 +12,20 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $primaryKey   = 'user_id';
+    protected $username     = 'username';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'full_name',
+        'username',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -29,16 +34,21 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function student()
+    {
+        return $this->hasMany('App\Models\Student', 'user_id');
+    }
+
+    public function question()
+    {
+        return $this->hasMany('App\Models\Question', 'user_id');
+    }
+
+    public function exam_token()
+    {
+        return $this->hasMany('App\Models\ExamToken', 'user_id');
+    }
 }
