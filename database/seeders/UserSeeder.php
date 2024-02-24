@@ -18,36 +18,27 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'full_name'     => 'Syafitra Alfa Ridzi',
-                'username'      => 'admin',
-                'email'         => 'ia1alfaridzi@gmail.com',
-                'password'      => Hash::make('123'),
-                'role'          => 'Admin Soal',
-                'created_at'    => Carbon::now(),
-                'updated_at'    => Carbon::now()
-            ],
-            [
-                'full_name'     => 'Guru I',
-                'username'      => 'gurusatu',
-                'email'         => 'gurusatu@gmail.com',
+                'full_name'     => 'Guru',
+                'username'      => 'guru',
+                'email'         => 'guru@gmail.com',
                 'password'      => Hash::make('123'),
                 'role'          => 'Guru',
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now()
             ],
             [
-                'full_name'     => 'Guru II',
-                'username'      => 'gurudua',
-                'email'         => 'gurudua@gmail.com',
+                'full_name'     => 'Siswa',
+                'username'      => 'siswa',
+                'email'         => 'siswa@gmail.com',
                 'password'      => Hash::make('123'),
-                'role'          => 'Guru',
+                'role'          => 'Siswa',
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now()
             ],
             [
-                'full_name'     => 'Admin Soal I',
-                'username'      => 'adminsoalsatu',
-                'email'         => 'adminsoalsatu@gmail.com',
+                'full_name'     => 'Admin Soal',
+                'username'      => 'adminsoal',
+                'email'         => 'adminsoal@gmail.com',
                 'password'      => Hash::make('123'),
                 'role'          => 'Admin Soal',
                 'created_at'    => Carbon::now(),

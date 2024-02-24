@@ -19,9 +19,9 @@ class CreateExamAnswersTable extends Migration
             $table->foreign('exam_id')->references('exam_id')->on('exams')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('question_id');
             $table->foreign('question_id')->references('question_id')->on('questions')->onUpdate('cascade')->onDelete('cascade');
-            $table->unsignedBigInteger('answer_id');
+            $table->unsignedBigInteger('answer_id')->nullable();
             $table->foreign('answer_id')->references('answer_id')->on('answers')->onUpdate('cascade')->onDelete('cascade');
-            $table->boolean('is_true');
+            $table->boolean('is_true')->nullable();
             $table->timestamps();
         });
     }

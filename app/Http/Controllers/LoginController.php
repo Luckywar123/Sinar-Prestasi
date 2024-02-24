@@ -31,7 +31,7 @@ class LoginController extends Controller
             } elseif ($user->role === 'Guru') {
                 return redirect()->intended('/guru/rekap');
             } elseif ($user->role === 'Siswa') {
-                return redirect()->intended('/siswa/home');
+                return redirect()->intended('/siswa/dashboard');
             } else {
                 return back()->with('loginError', 'Role pengguna tidak valid!');
             }

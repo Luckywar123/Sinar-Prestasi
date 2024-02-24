@@ -16,10 +16,11 @@ class CreateQuestionsTable extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id('question_id');
             $table->enum('category', ['TKP', 'TIU', 'TWK']);
-            $table->unsignedBigInteger('sub_category_id');
-            $table->foreign('sub_category_id')->references('sub_category_id')->on('sub_categories')->onUpdate('cascade')->onDelete('cascade');
+            // $table->unsignedBigInteger('sub_category_id');
+            // $table->foreign('sub_category_id')->references('sub_category_id')->on('sub_categories')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('sub_category');
             $table->string('question_image_url')->nullable();
-            $table->string('question_text');
+            $table->string('question_text')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('user_id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->enum('exam_type', ['Simulasi', 'Test']);

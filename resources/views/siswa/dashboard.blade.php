@@ -1,21 +1,17 @@
-@extends('siswa_layouts.master')
-
-@section('style')
-    <style>
-        body{
-            background-color: #D9D9D9;
-        }
-    </style>
-@endsection
+@extends('bimbel_layouts.master')
 
 @section('content')
 <div class="content w-75">
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12">
-            <img src="{{ asset('assets/simulasi.svg') }} "alt="Logo Full" width="50">
+            <a href="/siswa/simulasi">
+                <img src="{{ asset('assets/simulasi.svg') }}" alt="Logo Full" width="50">
+            </a>
         </div>
-        <div class="col-lg-6  col-md-12 col-sm-12">
-            <img src="{{ asset('assets/test.svg') }} "alt="Logo Full" width="50">
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <a href="/siswa/test">
+                <img src="{{ asset('assets/test.svg') }}" alt="Logo Full" width="50">
+            </a>
         </div>
     </div>
 </div>

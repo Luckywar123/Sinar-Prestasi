@@ -1,11 +1,7 @@
-@extends('siswa_layouts.master')
+@extends('bimbel_layouts.master')
 
 @section('style')
     <style>
-        body{
-            background-color: #D9D9D9;
-        }
-
         table tr:first-child th:first-child {
             border-top-left-radius: 1rem !important;
         }
@@ -23,42 +19,68 @@
 
 @section('content')
     <div class="content w-50">
-        <h4 class="card-title font-weight-bold my-3 text-left" style="color: #0F3077">Score</h5>
+        <h4 class="card-title fw-semibold my-3 text-start">Score</h5>
 
-        <table class="table table-bordered">
-            <thead class="table-light" style="background-color: #2F6BB3; color: #DFF8FD">
+        <table class="table">
+            <thead class="table" style="background-color: #2F6BB3; color: #DFF8FD">
                 <th>Tes</th>
                 <th>Soal</th>
                 <th>Jumlah Soal Benar</th>
                 <th>Nilai</th>
             </thead>
             <tbody style="background-color: #FFFFFF">
+                @php
+                    $scoresArray = is_array($data) ? $data : [$data];
+                @endphp
+
+                @if(count($scoresArray) > 1)
+                    @foreach($data as $score)
+                        <tr>
+                            <td style="color: #1C4B8F">{{ $score['Category'] }}</td>
+                            <td>{{ $score['Total_Soal'] }}</td>
+                            <td>{{ $score['Jawaban_Benar'] }}</td>
+                            <td>{{ $score['Nilai'] }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td style="color: #1C4B8F">{{ $data->Category }}</td>
+                        <td>{{ $data->Total_Soal }}</td>
+                        <td>{{ $data->Jawaban_Benar }}</td>
+                        <td>{{ $data->Nilai }}</td>
+                    </tr>
+                @endif
+
                 <tr>
-                    <td style="color: #1C4B8F">Tes Karakteristik Pribadi (TKP)</td>
-                    <td>35</td>
-                    <td>30</td>
-                    <td>70</td>
-                </tr>
-                <tr>
-                    <td style="color: #1C4B8F">Tes Intelegensi Umum (TIU)</td>
-                    <td>36</td>
-                    <td>23</td>
-                    <td>35</td>
-                </tr>
-                <tr>
-                    <td style="color: #1C4B8F">Tes Wawasan Kebangsaan (TWK)</td>
-                    <td>71</td>
-                    <td>55</td>
-                    <td>163</td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="background-color: #D9D9D9"></td>
-                    <td>268</td>
+                    <td colspan="3" style="background-color: #D9D9D9; border: none"></td>
+                    <td>{{ $overall_score }}</td>
                 </tr>
             </tbody>
         </table>
 
+        <div class="mt-5">&nbsp;</div>
+
+        @if(count($scoresArray) == 1)
+        @php
+            $category = $data->Category;
+            $charCount = strlen($category);
+            $lastFourChars = substr($category, -4); // Mengambil 4 karakter dari kanan
+            $processedCategory = substr($lastFourChars, 0, -1); // Menghapus 1 karakter dari kanan
+        @endphp
+
+        <div class="col-12 d-flex mt-5">
+            <a href="/siswa/simulasi/{{$processedCategory}}">
+                <button class="btn btn-md btn-secondary fw-semibold" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
+                    Ulang Simulasi
+                </button>
+            </a>
+            <a href="/siswa/dashboard" class="ms-auto ">
+                <button class="btn btn-md btn-secondary fw-semibold" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
+                    Main Menu
+                </button>
+            </a>
+        </div>
+        @endif
+
     </div>
 @endsection
-
-

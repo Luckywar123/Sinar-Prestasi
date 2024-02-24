@@ -11,7 +11,7 @@ class ExamAnswer extends Model
 
     protected $table        = 'exam_answers';
     protected $primaryKey   = 'exam_answer_id';
-    protected $fillable     = ['exam_id', 'question_id', 'answer_id', 'is_true'];
+    protected $fillable     = ['exam_id', 'question_id', 'answer_id', 'is_false'];
 
     public function exam()
     {

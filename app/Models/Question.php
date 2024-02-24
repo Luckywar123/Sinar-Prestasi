@@ -11,12 +11,12 @@ class Question extends Model
 
     protected $table        = 'questions';
     protected $primaryKey   = 'question_id';
-    protected $fillable     = ['category', 'sub_category_id', 'question_image_url', 'question_text', 'user_id', 'exam_type'];
+    protected $fillable     = ['category', 'sub_category', 'question_image_url', 'question_text', 'user_id', 'exam_type'];
 
-    public function sub_category()
-    {
-        return $this->belongsTo('App\Models\SubCategory', 'sub_category_id');
-    }
+    // public function sub_category()
+    // {
+    //     return $this->belongsTo('App\Models\SubCategory', 'sub_category_id');
+    // }
 
     public function user()
     {

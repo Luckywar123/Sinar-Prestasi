@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminSoalController;
+use App\Http\Controllers\SiswaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,13 +17,25 @@ use App\Http\Controllers\AdminSoalController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('bimbel_layouts.master');
 });
 
 //Login
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('/home', function () {
+    return view('siswa/home');
+});
+
+Route::get('/daftar', function () {
+    return view('siswa/daftar');
+});
+
+Route::get('/konsultasi', function () {
+    return view('siswa/konsultasi');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->group(function () {
@@ -33,40 +46,24 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('update-data-guru/{user_id}', [AdminSoalController::class, 'updateDataGuru'])->name('updateDataGuru');
         Route::get('delete-data-guru/{user_id}', [AdminSoalController::class, 'deleteDataGuru'])->name('deleteDataGuru');
 
+        Route::get('tambah-data-soal', [AdminSoalController::class, 'tambahDataSoal'])->name('tambahDataSoal');
+        Route::post('simpan-data-soal', [AdminSoalController::class, 'simpanDataSoal'])->name('simpanDataSoal');
+        Route::get('tambah-detail-soal/{question_id}', [AdminSoalController::class, 'tambahDetailSoal'])->name('tambahDetailSoal');
+        Route::patch('simpan-detail-soal/{question_id}', [AdminSoalController::class, 'simpanDetailSoal'])->name('simpanDetailSoal');
     });
 
     Route::prefix('siswa')->group(function () {
-        Route::get('/home', function () {
-            return view('siswa/home');
-        });
+        Route::get('dashboard', [SiswaController::class, 'goToDashboard'])->name('goToDashboard');
+        Route::get('simulasi', [SiswaController::class, 'goToSimulasi'])->name('goToSimulasi');
+        Route::get('test', [SiswaController::class, 'goToTest'])->name('goToTest');
 
-        Route::get('/daftar', function () {
-            return view('siswa/daftar');
-        });
+        Route::get('simulasi/{category}', [SiswaController::class, 'startSimulasi'])->name('startSimulasi');
+        Route::post('simpan-jawaban-simulasi/{exam_answer_id}', [SiswaController::class, 'simpanJawabanSimulasi'])->name('simpanJawabanSimulasi');
+        Route::post('selesai-simulasi', [SiswaController::class, 'selesaiSimulasi'])->name('selesaiSimulasi');
 
-        Route::get('/konsultasi', function () {
-            return view('siswa/konsultasi');
-        });
-
-        Route::get('/login', function () {
-            return view('siswa/login');
-        });
-
-        Route::get('/dashboard', function () {
-            return view('siswa/dashboard');
-        });
-
-        Route::get('/simulasi', function () {
-            return view('siswa/simulasi');
-        });
-
-        Route::get('/latihan', function () {
-            return view('siswa/latihan');
-        });
-
-        Route::get('/after-test', function () {
-            return view('siswa/after_test');
-        });
+        Route::get('after-test/{exam_id}', [SiswaController::class, 'afterTest'])->name('afterTest');
+        Route::get('score/{exam_id}', [SiswaController::class, 'scoreTest'])->name('scoreTest');
+        Route::get('hasil-test/{exam_id}', [SiswaController::class, 'hasilTest'])->name('hasilTest');
 
         Route::get('/nilai', function () {
             return view('siswa/nilai');
