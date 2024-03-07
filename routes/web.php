@@ -17,7 +17,7 @@ use App\Http\Controllers\SiswaController;
 */
 
 Route::get('/', function () {
-    return view('bimbel_layouts.master');
+    return redirect('/login');
 });
 
 //Login
