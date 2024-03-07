@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item active">
-                    <a class="nav-link text-light" href="/siswa/home">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link text-light" href="/home">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-light" href="#">Testimoni</a>
@@ -20,7 +20,7 @@
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="/siswa/login">Login</a> <!-- Tampilkan tautan login jika pengguna belum diautentikasi -->
+                        <a class="nav-link text-light" href="/login">Login</a> <!-- Tampilkan tautan login jika pengguna belum diautentikasi -->
                     </li>
                 @endauth
             </ul>
