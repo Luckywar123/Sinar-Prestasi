@@ -17,7 +17,7 @@ use App\Http\Controllers\SiswaController;
 */
 
 Route::get('/', function () {
-    return redirect('/login');
+    return redirect('/home');
 });
 
 //Login
