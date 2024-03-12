@@ -17,7 +17,14 @@ use App\Http\Controllers\SiswaController;
 */
 
 Route::get('/', function () {
-    return redirect('/home');
+    return view('siswa/home');
+});
+
+Route::get('/check-env', function () {
+    // Mengembalikan status environment
+    return response()->json([
+        'environment' => config('app.env'),
+    ]);
 });
 
 //Login
