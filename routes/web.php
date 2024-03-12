@@ -36,13 +36,16 @@ Route::get('/home', function () {
     return view('siswa/home');
 });
 
-Route::get('/daftar', function () {
-    return view('siswa/daftar');
+Route::get('/testimoni', function () {
+    return view('testimoni');
 });
+// Route::get('/daftar', function () {
+//     return view('siswa/daftar');
+// });
 
-Route::get('/konsultasi', function () {
-    return view('siswa/konsultasi');
-});
+// Route::get('/konsultasi', function () {
+//     return view('siswa/konsultasi');
+// });
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->group(function () {
