@@ -18,7 +18,7 @@ use App\Http\Controllers\GuruController;
 */
 
 Route::get('/', function () {
-    return view('bimbel_layouts.master');
+    return view('siswa.home');
 });
 
 //Login
@@ -36,6 +36,10 @@ Route::get('/daftar', function () {
 
 Route::get('/konsultasi', function () {
     return view('siswa/konsultasi');
+});
+
+Route::get('/testimoni', function () {
+    return view('testimoni');
 });
 
 Route::middleware(['auth'])->group(function () {
