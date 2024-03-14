@@ -29,6 +29,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-light" href="/testimoni">Testimoni</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/konsultasi">Kontak</a>
+                    </li>
                     @auth
                         <li class="nav-item">
                             <a class="nav-link text-light" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
