@@ -18,14 +18,7 @@ use App\Http\Controllers\GuruController;
 */
 
 Route::get('/', function () {
-    return view('siswa/home');
-});
-
-Route::get('/check-env', function () {
-    // Mengembalikan status environment
-    return response()->json([
-        'environment' => config('app.env'),
-    ]);
+    return view('siswa.home');
 });
 
 //Login
@@ -43,6 +36,10 @@ Route::get('/daftar', function () {
 
 Route::get('/konsultasi', function () {
     return view('siswa/konsultasi');
+});
+
+Route::get('/testimoni', function () {
+    return view('testimoni');
 });
 
 Route::middleware(['auth'])->group(function () {
