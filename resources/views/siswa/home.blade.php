@@ -41,7 +41,8 @@
         </div>
         <div class="row mt-2 justify-content-end">
             <div class="col-md-3">
-                <button type="button" class="btn btn-md rounded-pill px-4" style="background-color: #0F3077; color:#DFF8FD">Testimoni</button>
+
+                <a href="/testimoni" class="btn btn-md rounded-pill px-4" style="background-color: #0F3077; color:#DFF8FD">Testimoni</a>
             </div>
         </div>
     </div>
