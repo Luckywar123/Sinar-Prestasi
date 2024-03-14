@@ -71,7 +71,7 @@
                                 @endif
                             @endforeach
 
-                            @if ($key == 34)
+                            @if ($key === count($questions) - 1)
                             <div class="d-flex align-items-end flex-column mb-3" style="height: 200px;">
                                 <div class="p-2">
                                     <a href="/siswa/dashboard" class="ms-auto ">
@@ -99,7 +99,7 @@
                         <div class="card rounded align-items-center" style="background-color: #DFF8FD">
                             <div class="card-body">
                                 @foreach ($questions as $key => $examAnswer)
-                                    <button id="navigationBtn{{$key}}" class="btn btn-sm mb-1" style="width: 36px; @if ($examAnswer->is_false === 0) background-color: #5DB6FA; border-color:#5DB6FA  @else background-color: #FF4D3D; border-color:#FF4D3D  @endif " onclick="tampilkanSoal({{ $key }})">{{ $key+1 }}</button>
+                                    <button id="navigationBtn{{$key}}" class="btn btn-sm mb-1" style="width: 42px; @if ($examAnswer->is_false === 0) background-color: #5DB6FA; border-color:#5DB6FA  @else background-color: #FF4D3D; border-color:#FF4D3D  @endif " onclick="tampilkanSoal({{ $key }})">{{ $key+1 }}</button>
                                 @endforeach
                             </div>
                         </div>

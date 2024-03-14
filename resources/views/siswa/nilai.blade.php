@@ -34,13 +34,15 @@
                 @endphp
 
                 @if(count($scoresArray) > 1)
-                    @foreach($data as $score)
-                        <tr>
-                            <td style="color: #1C4B8F">{{ $score['Category'] }}</td>
-                            <td>{{ $score['Total_Soal'] }}</td>
-                            <td>{{ $score['Jawaban_Benar'] }}</td>
-                            <td>{{ $score['Nilai'] }}</td>
-                        </tr>
+                    @foreach($data as $key => $value)
+                        @if(is_array($value))
+                            <tr>
+                                <td style="color: #1C4B8F">{{ $key }}</td>
+                                <td>{{ $value['Total_Soal'] }}</td>
+                                <td>{{ $value['Jawaban_Benar'] }}</td>
+                                <td>{{ $value['Nilai'] }}</td>
+                            </tr>
+                        @endif
                     @endforeach
                 @else
                     <tr>
@@ -60,27 +62,23 @@
 
         <div class="mt-5">&nbsp;</div>
 
-        @if(count($scoresArray) == 1)
-        @php
-            $category = $data->Category;
-            $charCount = strlen($category);
-            $lastFourChars = substr($category, -4); // Mengambil 4 karakter dari kanan
-            $processedCategory = substr($lastFourChars, 0, -1); // Menghapus 1 karakter dari kanan
-        @endphp
 
         <div class="col-12 d-flex mt-5">
-            <a href="/siswa/simulasi/{{$processedCategory}}">
-                <button class="btn btn-md btn-secondary fw-semibold" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
-                    Ulang Simulasi
-                </button>
-            </a>
+
+            @if(count($scoresArray) == 1)
+                <a href="/siswa/simulasi/{{ $data->Type }}">
+                    <button class="btn btn-md btn-secondary fw-semibold" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
+                        Ulang Simulasi
+                    </button>
+                </a>
+            @endif
             <a href="/siswa/dashboard" class="ms-auto ">
                 <button class="btn btn-md btn-secondary fw-semibold" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
                     Main Menu
                 </button>
             </a>
         </div>
-        @endif
+
 
     </div>
 @endsection

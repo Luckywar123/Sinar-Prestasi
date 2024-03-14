@@ -15,8 +15,6 @@ class CreateExamTokensTable extends Migration
     {
         Schema::create('exam_tokens', function (Blueprint $table) {
             $table->id('exam_token_id');
-            $table->dateTime('date_start');
-            $table->dateTime('date_finish');
             $table->string('token');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('user_id')->on('users')->onUpdate('cascade')->onDelete('cascade');

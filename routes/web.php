@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminSoalController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\GuruController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,7 @@ use App\Http\Controllers\SiswaController;
 */
 
 Route::get('/', function () {
-    return redirect('/home');
+    return view('bimbel_layouts.master');
 });
 
 //Login
@@ -29,16 +30,13 @@ Route::get('/home', function () {
     return view('siswa/home');
 });
 
-Route::get('/testimoni', function () {
-    return view('testimoni');
+Route::get('/daftar', function () {
+    return view('siswa/daftar');
 });
-// Route::get('/daftar', function () {
-//     return view('siswa/daftar');
-// });
 
-// Route::get('/konsultasi', function () {
-//     return view('siswa/konsultasi');
-// });
+Route::get('/konsultasi', function () {
+    return view('siswa/konsultasi');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->group(function () {
@@ -58,15 +56,19 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('siswa')->group(function () {
         Route::get('dashboard', [SiswaController::class, 'goToDashboard'])->name('goToDashboard');
         Route::get('simulasi', [SiswaController::class, 'goToSimulasi'])->name('goToSimulasi');
-        Route::get('test', [SiswaController::class, 'goToTest'])->name('goToTest');
 
         Route::get('simulasi/{category}', [SiswaController::class, 'startSimulasi'])->name('startSimulasi');
         Route::post('simpan-jawaban-simulasi/{exam_answer_id}', [SiswaController::class, 'simpanJawabanSimulasi'])->name('simpanJawabanSimulasi');
         Route::post('selesai-simulasi', [SiswaController::class, 'selesaiSimulasi'])->name('selesaiSimulasi');
 
+        // Route::post('start-test', [SiswaController::class, 'startTest'])->name('startTest');
+        Route::post('start-test', [SiswaController::class, 'startTest'])->name('startTest');
+
         Route::get('after-test/{exam_id}', [SiswaController::class, 'afterTest'])->name('afterTest');
         Route::get('score/{exam_id}', [SiswaController::class, 'scoreTest'])->name('scoreTest');
         Route::get('hasil-test/{exam_id}', [SiswaController::class, 'hasilTest'])->name('hasilTest');
+
+
 
         Route::get('/nilai', function () {
             return view('siswa/nilai');
@@ -78,13 +80,20 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('guru')->group(function () {
-        Route::get('/rekap', function () {
-            return view('guru/rekap');
-        });
+        Route::get('list-data-siswa', [GuruController::class, 'listDataSiswa'])->name('listDataSiswa');
+        Route::get('tambah-data-siswa', [GuruController::class, 'tambahDataSiswa'])->name('tambahDataSiswa');
+        Route::post('simpan-data-siswa', [GuruController::class, 'simpanDataSiswa'])->name('simpanDataSiswa');
+        Route::get('detail-data-siswa/{student_id}', [GuruController::class, 'detailDataSiswa'])->name('detailDataSiswa');
+        Route::get('delete-data-siswa/{student_id}', [GuruController::class, 'deleteDataSiswa'])->name('deleteDataSiswa');
 
-        Route::get('/data', function () {
-            return view('guru/data');
-        });
+        Route::get('recap-data-siswa', [GuruController::class, 'recapDataSiswa'])->name('recapDataSiswa');
+
+        Route::get('get-guru-token', [GuruController::class, 'getToken'])->name('getToken');
+        Route::post('generate-new-token', [GuruController::class, 'generateToken'])->name('generateToken');
+
+        Route::get('data-statistik', [GuruController::class, 'dataStatistik'])->name('dataStatistik');
+
+        Route::get('print-statistik', [GuruController::class, 'printStatistik'])->name('printStatistik');
 
         Route::get('/statistik', function () {
             return view('guru/statistik');

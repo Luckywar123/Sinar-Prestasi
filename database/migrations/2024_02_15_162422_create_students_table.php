@@ -21,7 +21,7 @@ class CreateStudentsTable extends Migration
             $table->string('birth_place');
             $table->date('birth_date');
             $table->enum('gender', ['Laki-Laki', 'Perempuan']);
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->string('school_name')->nullable();
             $table->string('profile_image_url')->nullable();
             $table->timestamps();
