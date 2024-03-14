@@ -7,7 +7,7 @@
 @section('content')
 <div class="row">
     <div class="col-2 mb-3 ms-auto">
-        <button type="button" class="btn btn-md w-100" style="background-color: #4FA7F9; color: #000000;">Download</button>
+        <button onclick="printPage('{{ route('printStatistik') }}')" class="btn btn-md w-100" style="background-color: #4FA7F9; color: #000000;">Download</button>
     </div>
 
     <div class="col-12">
@@ -19,51 +19,116 @@
                 <th>Nilai</th>
             </thead>
             <tbody class="table-light" style="color: #1C4B8F">
+                @foreach ($topExams as $key => $data)
                 <tr>
-                    <td class="align-middle text-center">1</td>
-                    <td class="align-middle">1324543435363</td>
-                    <td class="align-middle">Nama Siswa</td>
-                    <td class="align-middle text-center">268</td>
+                    <td class="align-middle text-center">{{ $key + 1 }}</td>
+                    <td class="align-middle">{{ $data->student->student_number }}</td>
+                    <td class="align-middle">{{ $data->student->user->full_name }}</td>
+                    <td class="align-middle text-center">{{ $data->exam_score }}</td>
                 </tr>
-                <tr>
-                    <td class="align-middle text-center">2</td>
-                    <td class="align-middle">1324543435363</td>
-                    <td class="align-middle">Nama Siswa</td>
-                    <td class="align-middle text-center">268</td>
-                </tr>
-                <tr>
-                    <td class="align-middle text-center">3</td>
-                    <td class="align-middle">1324543435363</td>
-                    <td class="align-middle">Nama Siswa</td>
-                    <td class="align-middle text-center">266</td>
-                </tr>
-                <tr>
-                    <td class="align-middle text-center">4</td>
-                    <td class="align-middle">1324543435363</td>
-                    <td class="align-middle">Nama Siswa</td>
-                    <td class="align-middle text-center">266</td>
-                </tr>
-                <tr>
-                    <td class="align-middle text-center">5</td>
-                    <td class="align-middle">1324543435363</td>
-                    <td class="align-middle">Nama Siswa</td>
-                    <td class="align-middle text-center">265</td>
-                </tr>
+                @endforeach
+
             </tbody>
         </table>
     </div>
 
     <div class="col-8">
-        <div class="card">
-            Test
+        <div class="card p-4" style="border-radius: 0.7rem">
+            <canvas id="siswaStatistikChart" width="400" height="200"></canvas>
         </div>
     </div>
     <div class="col-4">
-        <div class="card mt-3 py-2" style="border-radius: 1rem">
-            <div class="card-body px-5 py-3">
-                <h5 class="card-title fw-semibold">Hasil Ujian Siswa</h5>
-            </div>
+        <div class="card p-4" style="height: 424px;" style="border-radius: 0.7rem">
+                <h4 class="card-title fw-semibold mb-4">Hasil Ujian Siswa</h4>
+                <div class="row mt-2 fs-5">
+                    <div class="col-3">
+                        TKP &nbsp;:
+                    </div>
+                    <div class="col-9">
+                        {{ $tkpTidakLulus }} Siswa tidak lulus
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-9">
+                        {{ $tkpLulus }} Siswa Lulus
+                    </div>
+                </div>
+                <div class="row mt-2 fs-5">
+                    <div class="col-3">
+                        TIU &nbsp;&nbsp;:
+                    </div>
+                    <div class="col-9">
+                        {{ $tiuTidakLulus }} Siswa tidak lulus
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-9">
+                        {{ $tiuLulus }} Siswa Lulus
+                    </div>
+                </div>
+                <div class="row mt-2 fs-5">
+                    <div class="col-3">
+                        TWK :
+                    </div>
+                    <div class="col-9">
+                        {{ $twkTidakLulus }} Siswa tidak lulus
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-9">
+                        {{ $twkLulus }} Siswa Lulus
+                    </div>
+                </div>
+                <div class="row mt-2 mx-1 mt-5 fs-5">
+                    <div class="col-2" style="background-color: #2F6BB3">.</div>
+                    <div class="col-3">Lulus</div>
+                    <div class="col-2" style="background-color: #FF4D3D">.</div>
+                    <div class="col-5">Tidak Lulus</div>
+                </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('siswaStatistikChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['TKP', 'TIU', 'TWK'],
+            datasets: [{
+                label: 'Lulus',
+                data: [{{ $tkpLulus }}, {{ $tiuLulus }}, {{ $twkLulus }}],
+                backgroundColor: 'rgba(47, 107, 179, 1)',
+
+                borderWidth: 1
+            }, {
+                label: 'Tidak Lulus',
+                data: [{{ $tkpTidakLulus }}, {{ $tiuTidakLulus }}, {{ $twkTidakLulus }}],
+                backgroundColor: 'rgba(255, 77, 61, 1)',
+
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+<script>
+    function printPage(url) {
+        // Buka halaman dalam tab baru
+        var newWindow = window.open(url, '_blank');
+
+        // Tunggu sebentar untuk memastikan halaman terbuka sebelum melakukan pencetakan
+        setTimeout(function() {
+            // Lakukan pencetakan
+            newWindow.print();
+        }, 1000); // Tunggu 1 detik sebelum melakukan pencetakan
+    }
+</script>
+
+@endpush

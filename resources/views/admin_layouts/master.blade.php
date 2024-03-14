@@ -71,7 +71,35 @@
         // Panggil fungsi setActiveLink() setiap kali halaman dimuat
         window.onload = function() {
             setActiveLink();
+
+            fetch('{{ route("getToken") }}', {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('token').innerHTML = `Token : ${data.data}`
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         };
+
+        function regenerateToken() {
+            fetch('{{ route("generateToken") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('token').innerHTML = `Token : ${data.data}`
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
     </script>
 
     @stack('scripts')

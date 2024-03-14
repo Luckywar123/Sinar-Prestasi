@@ -7,6 +7,7 @@ use App\Models\Exam;
 use App\Models\ExamAnswer;
 use App\Models\Student;
 use App\Models\Answer;
+use App\Models\ExamToken;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -24,17 +25,13 @@ class SiswaController extends Controller
         return view('siswa.simulasi');
     }
 
-    public function goToTest()
-    {
-        return view('siswa.simulasi');
-    }
-
     public function startSimulasi($category){
         $user_id        = auth()->user()->user_id;
         $student        = Student::where('user_id', $user_id)->first();
         $current_time   = now();
         $current_status = 'Ongoing';
         $current_exam   = Exam::where('student_id', $student->student_id)
+                            ->where('exam_type', 'Simulasi')
                             ->where('exam_status', $current_status)
                             ->get();
 
@@ -191,6 +188,7 @@ class SiswaController extends Controller
 
         $data = [];
         $overall_score = 0;
+        $category = "";
 
         if ($exam->exam_type == "Simulasi") {
             $exam_answers = ExamAnswer::with(['answer'])
@@ -203,13 +201,13 @@ class SiswaController extends Controller
             ->where('exam_id', $exam_id)
             ->first();
 
-            $category = $question_category_data->question->category;
+            $category_data = $question_category_data->question->category;
 
-            if($category == "TKP"){
+            if($category_data == "TKP"){
                 $category = "Tes Karakteristik Pribadi (TKP)";
-            }else if($category == "TIU"){
+            }else if($category_data == "TIU"){
                 $category = "Tes Intelegensi Umum (TIU)";
-            }else if($category == "TWK"){
+            }else if($category_data == "TWK"){
                 $category = "Tes Wawasan Kebangsaan (TWK)";
             }
 
@@ -226,6 +224,7 @@ class SiswaController extends Controller
                 'Total_Soal'  => 35,
                 'Jawaban_Benar' => $is_true,
                 'Nilai' => $exam_scores,
+                'Type' => $category_data
             ];
 
         } else if ($exam->exam_type == "Test") {
@@ -264,6 +263,7 @@ class SiswaController extends Controller
 
             // Mengirimkan data
             $data = $categories;
+            $data["Type"] = "Test";
 
         }
 
@@ -311,4 +311,89 @@ class SiswaController extends Controller
         return view('siswa.hasil', compact('questions', 'minScores', 'maxScores'));
     }
 
+    public function startTest(Request $request){
+        $token = $request->token;
+        $token_data = ExamToken::where('token', $token)->first();
+
+        if(empty($token_data)){
+            return redirect()->back()->with('error', 'Token yang Anda masukkan tidak valid')->withInput();
+        }else {
+            $user_id        = auth()->user()->user_id;
+            $student        = Student::where('user_id', $user_id)->first();
+            $current_time   = now();
+            $current_status = 'Ongoing';
+            $categories = ['TKP', 'TIU', 'TWK'];
+            $questions = collect(); // Inisialisasi koleksi untuk menyimpan semua pertanyaan
+            $current_exam   = Exam::where('student_id', $student->student_id)
+                                ->where('exam_type', 'Test')
+                                ->where('exam_status', $current_status)
+                                ->get();
+
+            if($current_exam->isEmpty()){
+                try {
+                    $exam = Exam::create([
+                        'exam_type'     => "Test",
+                        'student_id'    => $student->student_id,
+                        'exam_start'    => $current_time,
+                        'exam_status'   => $current_status
+                    ]);
+
+                    foreach ($categories as $category) {
+                        // Mengambil 35 pertanyaan untuk setiap kategori
+                        $questionsPerCategory = Question::inRandomOrder()
+                                                        ->where('category', $category)
+                                                        ->limit(35)
+                                                        ->get();
+
+                        // Menggabungkan pertanyaan dari setiap kategori ke dalam koleksi utama
+                        $questions = $questions->merge($questionsPerCategory);
+                    }
+
+                    foreach($questions as $question){
+                        try{
+                            $exam_answers = ExamAnswer::create([
+                                'exam_id'       => $exam->exam_id,
+                                'question_id'   => $question->question_id,
+                            ]);
+                        } catch(\Exception $e){
+                            return redirect('siswa/simulasi')->with('error', 'Terjadi kesalahan saat menyimpan data soal pada exam.');
+                        }
+                    }
+
+                    $questions  = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
+
+                    // Tambahkan kode untuk timer di sini
+                    // Ambil waktu mulai ujian dari tabel exam
+                    $examStart = $exam->exam_start;
+
+                    // Tambahkan 70 menit ke waktu mulai ujian
+                    $examEnd = Carbon::parse($examStart)->addMinutes(120);
+
+                    // Hitung sisa waktu yang tersisa
+                    $currentTime = Carbon::now();
+                    $remainingTime = $examEnd->diffInSeconds($currentTime);
+
+                    return view('siswa.latihan', compact('questions', 'remainingTime'));
+
+                } catch (\Exception $e) {
+                    return redirect('siswa/simulasi')->with('error', 'Terjadi kesalahan saat menyimpan data exam.');
+                }
+            }else{
+                $exam       = Exam::where('student_id', $student->student_id)->where('exam_status', $current_status)->first();
+                $questions  = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
+
+                // Ambil waktu mulai ujian dari tabel exam
+                $examStart = $exam->exam_start;
+
+                // Tambahkan 70 menit ke waktu mulai ujian
+                $examEnd = Carbon::parse($examStart)->addMinutes(120);
+
+                // Hitung sisa waktu yang tersisa
+                $currentTime = Carbon::now();
+                $remainingTime = $examEnd->diffInSeconds($currentTime);
+
+                return view('siswa.latihan', compact('questions', 'remainingTime'));
+            }
+        }
+    }
 }

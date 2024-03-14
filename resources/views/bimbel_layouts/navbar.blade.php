@@ -8,7 +8,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">
-                @if(Request::is('siswa/simulasi/*')) <!-- Jika URL cocok dengan pola 'simulasi/*' -->
+                @if(Request::is('siswa/simulasi/*') || Request::is('siswa/start-test')) <!-- Jika URL cocok dengan pola 'simulasi/*' -->
                     <li class="nav-item">
                         <p class="nav-link text-light" >
                             <i class="fas fa-stopwatch me-2" style="color: #DFF8FD; font-size: 20px;"></i>

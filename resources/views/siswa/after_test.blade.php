@@ -7,11 +7,13 @@
                 <h3 class="card-title font-weight-bold my-3" style="color: #0F3077"><?php echo auth()->user()->full_name ?></h5>
 
                 <div>
+                    @if ($exam->exam_type == "Simulasi")
                     <a href="/siswa/simulasi/{{$category}}">
                         <button type="button" class="form-control btn btn-md rounded px-4 my-4 w-75" style="background-color: #2F6BB3; color:#FFFFFF">
                             Repeat
                         </button>
                     </a>
+                    @endif
                     <a href="/siswa/score/{{ $exam->exam_id }}">
                         <button type="button" class="form-control btn btn-md rounded px-4 w-75" style="background-color: #2F6BB3; color:#FFFFFF">
                             See Score

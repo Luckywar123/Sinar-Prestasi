@@ -61,7 +61,7 @@
                                 <button class="btn btn-md btn-secondary" style="width: 140px; background-color: #A6A6A6; border-color:#A6A6A6" onclick="previousSoal()">
                                     Back
                                 </button>
-                                @if ($key == 34)
+                                @if ($key === count($questions) - 1)
                                     <form id="formSelesaiSimulasi" action="/siswa/selesai-simulasi" method="POST">
                                         @csrf
                                         <button type="Submit" class="btn btn-md btn-secondary mx-4" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
@@ -78,11 +78,11 @@
                     </div>
                 @endforeach
                 <div class="row mt-5">
-                    <div class="col-md-7 mx-auto">
+                    <div class="col-md-7 mx-auto align-items-center">
                         <div class="card rounded align-items-center" style="background-color: #DFF8FD">
                             <div class="card-body">
                                 @foreach ($questions as $key => $examAnswer)
-                                    <button id="navigationBtn{{$key}}" @if (!empty($examAnswer->answer_id)) class="btn btn-sm btn-primary mb-1" @else class="btn btn-sm btn-secondary mb-1" @endif style="width: 36px" onclick="tampilkanSoal({{ $key }})">{{ $key+1 }}</button>
+                                    <button id="navigationBtn{{$key}}" @if (!empty($examAnswer->answer_id)) class="btn btn-sm btn-primary mb-1" @else class="btn btn-sm btn-secondary mb-1" @endif style="width: 42px" onclick="tampilkanSoal({{ $key }})">{{ $key+1 }}</button>
                                 @endforeach
                             </div>
                         </div>
@@ -191,14 +191,21 @@
     // Fungsi untuk menampilkan timer
     function displayTimer(remainingTime) {
         let timerElement = document.getElementById('timer');
-        let minutes = Math.floor(remainingTime / 60);
-        let seconds = remainingTime % 60;
-        timerElement.textContent = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+        let hours = Math.floor(remainingTime / 3600); // Menghitung jumlah jam
+        let minutes = Math.floor((remainingTime % 3600) / 60); // Menghitung jumlah menit
+        let seconds = remainingTime % 60; // Menghitung jumlah detik
+
+        // Format waktu dengan menambahkan nol di depan angka jika hanya satu digit
+        let formattedTime = hours.toString().padStart(2, '0') + ':' +
+                            minutes.toString().padStart(2, '0') + ':' +
+                            seconds.toString().padStart(2, '0');
+
+        timerElement.textContent = formattedTime;
 
         // Jika waktu habis, lakukan tindakan yang sesuai
         if (remainingTime <= 0) {
             // Tampilkan pesan atau lakukan tindakan yang sesuai
-            timerElement.textContent = '00:00';
+            timerElement.textContent = '00:00:00';
             document.getElementById("formSelesaiSimulasi").submit(); // Kirim formulir saat waktu habis
         }
     }

@@ -29,7 +29,7 @@ class LoginController extends Controller
             if($user->role === 'Admin Soal') {
                 return redirect()->intended('/admin/list-data-guru');
             } elseif ($user->role === 'Guru') {
-                return redirect()->intended('/guru/rekap');
+                return redirect()->intended('/guru/recap-data-siswa');
             } elseif ($user->role === 'Siswa') {
                 return redirect()->intended('/siswa/dashboard');
             } else {
