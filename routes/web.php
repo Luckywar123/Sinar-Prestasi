@@ -18,7 +18,6 @@ use App\Http\Controllers\GuruController;
 */
 
 Route::get('/', function () {
-<<<<<<< HEAD
     return view('siswa/home');
 });
 
@@ -27,9 +26,6 @@ Route::get('/check-env', function () {
     return response()->json([
         'environment' => config('app.env'),
     ]);
-=======
-    return view('bimbel_layouts.master');
->>>>>>> fda91176a19eaa4a30b67ed1f2859d75de34b81c
 });
 
 //Login
