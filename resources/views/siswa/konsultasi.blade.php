@@ -33,10 +33,20 @@
                     </button>
                     
                     <button type="button" class="form-control btn btn-lg rounded-pill px-4 my-4 w-75" style="background-color: #60D669; color: #000000;">
-                        <i class="fab fa-whatsapp mr-2"></i><a href="https://api.whatsapp.com/send?phone082295562910&text=Halo%20kak%20,%20Saya%20tertarik%20buat%20join%20bimbelnya%20kak.">Send Message</a>
+                        <i class="fab fa-whatsapp fa-bounce mr-2"></i><a href="https://api.whatsapp.com/send?phone082295562910&text=Halo%20kak%20,%20Saya%20tertarik%20buat%20join%20bimbelnya%20kak.">Send Message</a>
                         Chat on Whatsapp
                     </button>
                     
+                    <button type="button" class="form-control btn btn-lg rounded-pill px-4 my-4 w-75" style="background-color: #ffffff; color: #ff00dd;">
+                        <i class="fa-brands fa-instagram fa-bounce mr-2" ></i><a href="https://www.instagram.com/bimbelsinarprestasi/.">Instagram</a>
+                        Check Our Instagram
+                    </button>
+
+                    <button type="button" class="form-control btn btn-lg rounded-pill px-4 my-4 w-75" style="background-color: #ffffff; color: #0092ff;">
+                        <i class="fab fa-facebook-f fa-shake mr-2"></i><a href="https://www.facebook.com/profile.php?id=61557157866649.">Facebook</a>
+                        Check Our Facebook
+                    </button>
+
                 </div>
             </div>
         </div>
