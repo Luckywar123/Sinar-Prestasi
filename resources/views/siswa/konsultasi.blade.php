@@ -25,16 +25,18 @@
                 <div>
                     <button type="button" class="form-control btn btn-lg rounded-pill px-4 my-4 w-75" style="background-color: #0F3077; color:#DFF8FD">
                         <i class="fas fa-phone mr-2"></i>
-                        +62 21 3117 7777
+                        +62 822-9556-2910 
                     </button>
                     <button type="button" class="form-control btn btn-lg rounded-pill px-4 w-75" style="background-color: #0F3077; color:#DFF8FD">
-                        <i class="fas fa-envelope mr-2"></i>
-                        Halo@sinar.co
+                        <i class="fas fa-envelope mr-2"></i> <a href="mailto:bimbelsinarprestasi@gmail.com">Send Email</a>
+                        bimbelsinarprestasi@gmail.com
                     </button>
+                    
                     <button type="button" class="form-control btn btn-lg rounded-pill px-4 my-4 w-75" style="background-color: #60D669; color: #000000;">
-                        <i class="fab fa-whatsapp mr-2"></i>
+                        <i class="fab fa-whatsapp mr-2"></i><a href="https://api.whatsapp.com/send?phone082295562910&text=Halo%20kak%20,%20Saya%20tertarik%20buat%20join%20bimbelnya%20kak.">Send Message</a>
                         Chat on Whatsapp
                     </button>
+                    
                 </div>
             </div>
         </div>
