@@ -9,7 +9,7 @@
             </a>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-            <a href="/siswa/test">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#tokenModal">
                 <img src="{{ asset('assets/Test.svg') }}" alt="Logo Full" width="50">
             </a>
         </div>

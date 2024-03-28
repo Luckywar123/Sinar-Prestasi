@@ -36,8 +36,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>
-                                {{-- <a href="javasript:void(0)">Ubah Profil</a> --}}
-                                Ubah Profil
+                                <a class="dropdown-item" href="/siswa/ubah-profil/<?php echo auth()->user()->user_id; ?>">Ubah Profil</a>
                             </li>
                         </ul>
                     </li>

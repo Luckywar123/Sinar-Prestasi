@@ -72,7 +72,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('score/{exam_id}', [SiswaController::class, 'scoreTest'])->name('scoreTest');
         Route::get('hasil-test/{exam_id}', [SiswaController::class, 'hasilTest'])->name('hasilTest');
 
-
+        Route::get('ubah-profil/{user_id}', [SiswaController::class, 'ubahProfil'])->name('ubahProfil');
+        Route::patch('update-profile/{student_id}', [SiswaController::class, 'updateProfil'])->name('updateProfil');
 
         Route::get('/nilai', function () {
             return view('siswa/nilai');
