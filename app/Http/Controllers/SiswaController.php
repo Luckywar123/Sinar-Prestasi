@@ -329,8 +329,9 @@ class SiswaController extends Controller
     }
 
     public function startTest(Request $request){
-        $token = $request->token;
-        $token_data = ExamToken::where('token', $token)->first();
+        $token          = $request->token;
+        $token_data     = ExamToken::where('token', $token)->first();
+
 
         if(empty($token_data)){
             return redirect()->back()->with('error', 'Token yang Anda masukkan tidak valid')->withInput();
@@ -342,6 +343,16 @@ class SiswaController extends Controller
             $categories     = ['TWK', 'TIU', 'TKP'];
             $exam_type      = "Test";
             $questions = collect(); // Inisialisasi koleksi untuk menyimpan semua pertanyaan
+
+            $exam_status    = Exam::where('student_id', $student->student_id)
+                                ->where('exam_type', 'Test')
+                                ->where('token', $token)
+                                ->get();
+
+            if(!empty($exam_status)){
+                return redirect()->back()->with('error', 'Token yang Anda masukkan telah digunakan sebelumnya.')->withInput();
+            }
+
             $current_exam   = Exam::where('student_id', $student->student_id)
                                 ->where('exam_type', 'Test')
                                 ->where('exam_status', $current_status)
