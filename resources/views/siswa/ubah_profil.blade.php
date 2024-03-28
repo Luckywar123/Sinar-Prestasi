@@ -153,7 +153,7 @@
                         </div>
                         <div class="form-group row mt-2">
                             <div class="col-sm-12">
-                                <button type="suvmit" class="btn btn-primary form-control" style="background-color: #5DB6FA; border-color:#5DB6FA">Simpan</button>
+                                <button type="submit" class="btn btn-primary form-control shadow" style="background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA"">Simpan</button>
                             </div>
                         </div>
                     </form>

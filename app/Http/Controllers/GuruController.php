@@ -112,20 +112,17 @@ class GuruController extends Controller
             $token .= $characters[mt_rand(0, $maxIndex)];
         }
 
-        $currentToken = ExamToken::where('user_id', $user_id)->first();
+        $currentToken = ExamToken::where('user_id', $user_id)->WHERE('status', 'Simulasi')->first();
 
-        if(empty($currentToken)){
-            ExamToken::create([
-                'token'     => $token,
-                'user_id'   => $user_id
-            ]);
-        }else {
+        if(!empty($currentToken)){
             ExamToken::destroy($currentToken->exam_token_id);
-            ExamToken::create([
-                'token'     => $token,
-                'user_id'   => $user_id
-            ]);
         }
+
+        ExamToken::create([
+            'token'     => $token,
+            'user_id'   => $user_id,
+            'status'    => 'Simulasi'
+        ]);
 
         return response()->json([
             'status'  => "Success",
@@ -138,7 +135,7 @@ class GuruController extends Controller
         //Gete user_id from auth session
         $user_id = auth()->user()->user_id;
 
-        $currentToken = ExamToken::where('user_id', $user_id)->first();
+        $currentToken = ExamToken::where('user_id', $user_id)->WHERE('status', 'Simulasi')->first();
 
         if(empty($currentToken)){
             $token = '-';
@@ -161,7 +158,15 @@ class GuruController extends Controller
         $twkLulus       = 0;
         $twkTidakLulus  = 0;
 
+        $token_data     = ExamToken::WHERE('status', 'Simulasi')->first();
+
+        if (!$token_data) {
+            // Meneruskan ke halaman tujuan dengan nilai default
+            return view('guru.statistik', compact('tkpLulus', 'tkpTidakLulus', 'tiuLulus', 'tiuTidakLulus', 'twkLulus', 'twkTidakLulus'));
+        }
+
         $topExams = Exam::where('exam_type', 'Test') // Filter exam_type = 'Test'
+                ->WHERE('token', $token_data->token)
                 ->orderBy('exam_score', 'desc') // Urutkan berdasarkan exam_score secara descending
                 ->take(5) // Ambil 5 nilai tertinggi
                 ->get(); // Ambil hasil
@@ -169,6 +174,7 @@ class GuruController extends Controller
         $examData = Exam::where('exam_type', 'Test')
                     ->with('exam_answer')
                     ->with('exam_answer.question')
+                    ->WHERE('token', $token_data->token)
                     ->get();
 
         foreach($examData as $data){

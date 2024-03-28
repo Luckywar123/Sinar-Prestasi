@@ -28,16 +28,18 @@
     <div class="container-wrapper pt-4 px-5 content">
         <div class="row">
 
-            <h2 class="fw-semibold text-center my-4">Statistik Data Test Siswa</h2>
+            <h2 class="fw-semibold text-center my-4">Statistik Simulasi CAT</h2>
 
-            <div class="col-12">
+            <div class="col-12 mb-5">
                 <table class="table table-bordered">
                     <thead class="text-center" style="background-color: #2F6BB3; color: #DFF8FD">
-                        <tr><th>Rank</th>
-                        <th>No. Peserta</th>
-                        <th>Nama</th>
-                        <th>Nilai</th>
-                    </tr></thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>No. Peserta</th>
+                            <th>Nama</th>
+                            <th>Nilai</th>
+                        </tr>
+                    </thead>
                     <tbody class="table-light" style="color: #1C4B8F">
                         @foreach ($topExams as $key => $data)
                         <tr>
@@ -52,56 +54,36 @@
                 </table>
             </div>
 
-            <div class="col-8">
-                <div class="card p-4" style="border-radius: 0.7rem">
-                    <canvas id="siswaStatistikChart" width="400" height="200"></canvas>
-                </div>
+            <canvas id="siswaStatistikChart"></canvas>
+
+            <div class="col-12 mt-5 w-50 mx-auto">
+                <table class="table table-bordered">
+                    <thead class="text-center" style="background-color: #2F6BB3; color: #DFF8FD">
+                        <tr>
+                            <th>Kategori Soal</th>
+                            <th>Jumlah Lulus</th>
+                            <th>Jumlah Tidak Lulus</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-light" style="color: #1C4B8F">
+                        <tr>
+                            <td class="align-middle text-center">TWK</td>
+                            <td class="align-middle text-center">{{ $twkLulus }}</td>
+                            <td class="align-middle text-center">{{ $twkTidakLulus }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-center">TIU</td>
+                            <td class="align-middle text-center">{{ $tiuLulus }}</td>
+                            <td class="align-middle text-center">{{ $tiuTidakLulus }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-center">TKP</td>
+                            <td class="align-middle text-center">{{ $tkpLulus }}</td>
+                            <td class="align-middle text-center">{{ $tkpTidakLulus }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="card p-4" style="height: 424px;" style="border-radius: 0.7rem">
-                <h4 class="card-title fw-semibold mb-4">Hasil Ujian Siswa</h4>
-                <div class="row mt-2 fs-5">
-                    <div class="col-3">
-                        TKP &nbsp;:
-                    </div>
-                    <div class="col-9">
-                        {{ $tkpTidakLulus }} Siswa tidak lulus
-                    </div>
-                    <div class="col-3"></div>
-                    <div class="col-9">
-                        {{ $tkpLulus }} Siswa Lulus
-                    </div>
-                </div>
-                <div class="row mt-2 fs-5">
-                    <div class="col-3">
-                        TIU &nbsp;&nbsp;:
-                    </div>
-                    <div class="col-9">
-                        {{ $tiuTidakLulus }} Siswa tidak lulus
-                    </div>
-                    <div class="col-3"></div>
-                    <div class="col-9">
-                        {{ $tiuLulus }} Siswa Lulus
-                    </div>
-                </div>
-                <div class="row mt-2 fs-5">
-                    <div class="col-3">
-                        TWK :
-                    </div>
-                    <div class="col-9">
-                        {{ $twkTidakLulus }} Siswa tidak lulus
-                    </div>
-                    <div class="col-3"></div>
-                    <div class="col-9">
-                        {{ $twkLulus }} Siswa Lulus
-                    </div>
-                </div>
-                <div class="row mt-2 mx-1 mt-5 fs-5">
-                    <div class="col-2" style="background-color: #2F6BB3">.</div>
-                    <div class="col-3">Lulus</div>
-                    <div class="col-2" style="background-color: #FF4D3D">.</div>
-                    <div class="col-5">Tidak Lulus</div>
-                </div>
-        </div>
         </div>
     </div>
 

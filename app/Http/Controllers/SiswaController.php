@@ -347,7 +347,8 @@ class SiswaController extends Controller
                         'exam_type'     => "Test",
                         'student_id'    => $student->student_id,
                         'exam_start'    => $current_time,
-                        'exam_status'   => $current_status
+                        'exam_status'   => $current_status,
+                        'token'         => $token
                     ]);
 
                     foreach ($categories as $category) {
@@ -471,5 +472,13 @@ class SiswaController extends Controller
             $request->session()->flash('error', 'Terjadi kesalahan saat memperbaharaui akun siswa.');
                 return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
         }
+    }
+
+    public function riwayatTest(){
+        $auth       = Auth::user();
+        $user_id    = $auth->user_id;
+        $student    = Student::WHERE('user_id', $user_id)->first();
+        $exams      = Exam::WHERE('student_id', $student->student_id)->ORDERBY('created_at', 'DESC')->get();
+        return view('siswa.riwayat', ['exams' => $exams]);
     }
 }
