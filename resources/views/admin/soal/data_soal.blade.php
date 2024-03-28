@@ -34,8 +34,8 @@
                             <select class="form-control" name="category" id="category">
                                 <option value="" selected disabled hidden>Pilih Jenis Soal</option>
                                 <option value="TKP">Tes Karakteristik Pribadi (TKP)</option>
-                                <option value="TIU">Tes Intelegensia Umum (TIU)</option>
-                                <option value="TWK">Tes Wawancara Kebangsaan (TWK)</option>
+                                <option value="TIU">Tes Wawancara Kebangsaan (TWK)</option>
+                                <option value="TWK">Tes Intelegensia Umum (TIU)</option>
                             </select>
                         </div>
                     </div>
