@@ -11,12 +11,12 @@
         </div>
         <div class="p-2">
             <a href="/siswa/simulasi/TIU">
-                <img src="{{ asset('assets/TWK.svg') }} "alt="TIU">
+                <img src="{{ asset('assets/TIU.svg') }} "alt="TIU">
             </a>
         </div>
         <div class="p-2">
             <a href="/siswa/simulasi/TWK">
-                <img src="{{ asset('assets/TIU.svg') }} "alt="TWK">
+                <img src="{{ asset('assets/TWK.svg') }} "alt="TWK">
             </a>
         </div>
     </div>
