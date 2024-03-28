@@ -90,7 +90,7 @@
             <div class="scrollable-container">
                 <div class="card-container ms-5">
                     <!-- Card 1 -->
-                    <div class="card card-testimoni px-4 py-4">
+                    <div class="card shadow card-testimoni px-4 py-4">
                         <div class="row g-0">
                             <div class="col-md-3 d-flex align-items-center">
                                 <div class="rounded-circle overflow-hidden" style="width: 80px; height: 80px;">
@@ -115,7 +115,7 @@
                         </div>
                     </div>
                     <!-- Card 2 -->
-                    <div class="card card-testimoni px-4 py-4">
+                    <div class="card shadow card-testimoni px-4 py-4">
                         <div class="row g-0">
                             <div class="col-md-3 d-flex align-items-center">
                                 <div class="rounded-circle overflow-hidden" style="width: 80px; height: 80px;">
@@ -138,7 +138,7 @@
                         </div>
                     </div>
                     <!-- Card 3 -->
-                    <div class="card card-testimoni px-4 py-4">
+                    <div class="card shadow card-testimoni px-4 py-4">
                         <div class="row g-0">
                             <div class="col-md-3 d-flex align-items-center">
                                 <div class="rounded-circle overflow-hidden" style="width: 80px; height: 80px;">
@@ -161,7 +161,7 @@
                         </div>
                     </div>
                     <!-- Card 4 -->
-                    <div class="card card-testimoni px-4 py-4">
+                    <div class="card shadow card-testimoni px-4 py-4">
                         <div class="row g-0">
                             <div class="col-md-3 d-flex align-items-center">
                                 <div class="rounded-circle overflow-hidden" style="width: 80px; height: 80px;">
@@ -182,7 +182,7 @@
                         </div>
                     </div>
                     <!-- Card 5 -->
-                    <div class="card card-testimoni px-4 py-4">
+                    <div class="card shadow card-testimoni px-4 py-4">
                         <div class="row g-0">
                             <div class="col-md-3 d-flex align-items-center">
                                 <div class="rounded-circle overflow-hidden" style="width: 80px; height: 80px;">
@@ -250,7 +250,7 @@
         <div class="container-fluid" style="background-color: #d9d9d9;"">
             <div class="row justify-content-center">
                 <div class="col-lg-2 mb-4 mt-4 mx-2">
-                    <div class="card" style="background-color: #5DB6FA">
+                    <div class="card shadow" style="background-color: #5DB6FA; border: 0">
                         <img src="assets/testi_1.jpeg" class="card-img-top img-fluid" alt="Testimonial Image" style="object-fit: cover; height: 250px;">
                         <div class="card-body">
                             <h5 class="card-title font-weight-bold">Senda Adriansyah</h5>
@@ -259,7 +259,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 mb-4 mt-4 mx-2">
-                    <div class="card" style="background-color: #5DB6FA">
+                    <div class="card shadow" style="background-color: #5DB6FA; border: 0">
                         <img src="assets/testi_2.jpeg" class="card-img-top img-fluid" alt="Testimonial Image" style="object-fit: cover; height: 250px;">
                         <div class="card-body">
                             <h5 class="card-title font-weight-bold">Lucy Irta</h5>
@@ -268,7 +268,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 mb-4 mt-4 mx-2">
-                    <div class="card" style="background-color: #5DB6FA">
+                    <div class="card shadow" style="background-color: #5DB6FA; border: 0">
                         <img src="assets/testi_3.jpeg" class="card-img-top img-fluid" alt="Testimonial Image" style="object-fit: cover; height: 250px;">
                         <div class="card-body">
                             <h5 class="card-title font-weight-bold">Refal Fadly</h5>
@@ -277,7 +277,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 mb-4 mt-4 mx-2">
-                    <div class="card" style="background-color: #5DB6FA">
+                    <div class="card shadow" style="background-color: #5DB6FA; border: 0">
                         <img src="assets/testi_4.jpeg" class="card-img-top img-fluid" alt="Testimonial Image" style="object-fit: cover; height: 250px;">
                         <div class="card-body">
                             <h5 class="card-title font-weight-bold">Refal Fadly</h5>
@@ -288,7 +288,7 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-lg-2 mb-4 mt-4 mx-2">
-                    <div class="card" style="background-color: #5DB6FA">
+                    <div class="card shadow" style="background-color: #5DB6FA; border: 0">
                         <img src="assets/testi_5.jpeg" class="card-img-top img-fluid" alt="Testimonial Image" style="object-fit: cover; height: 250px;">
                         <div class="card-body">
                             <h5 class="card-title font-weight-bold">Resti Sandya Dhita</h5>
@@ -297,7 +297,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 mb-4 mt-4 mx-2">
-                    <div class="card" style="background-color: #5DB6FA">
+                    <div class="card shadow" style="background-color: #5DB6FA; border: 0">
                         <img src="assets/testi_1.jpeg" class="card-img-top img-fluid" alt="Testimonial Image" style="object-fit: cover; height: 250px;">
                         <div class="card-body">
                             <h5 class="card-title font-weight-bold">Senda Adriansyah</h5>
@@ -306,7 +306,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 mb-4 mt-4 mx-2">
-                    <div class="card" style="background-color: #5DB6FA">
+                    <div class="card shadow" style="background-color: #5DB6FA; border: 0">
                         <img src="assets/testi_2.jpeg" class="card-img-top img-fluid" alt="Testimonial Image" style="object-fit: cover; height: 250px;">
                         <div class="card-body">
                             <h5 class="card-title font-weight-bold">Lucy Irta</h5>
@@ -315,7 +315,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 mb-4 mt-4 mx-2">
-                    <div class="card" style="background-color: #5DB6FA">
+                    <div class="card shadow" style="background-color: #5DB6FA; border: 0">
                         <img src="assets/testi_3.jpeg" class="card-img-top img-fluid" alt="Testimonial Image" style="object-fit: cover; height: 250px;">
                         <div class="card-body">
                             <h5 class="card-title font-weight-bold">Refal Fadly</h5>
