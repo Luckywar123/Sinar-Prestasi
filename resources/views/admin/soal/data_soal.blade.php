@@ -85,9 +85,9 @@
         // Tambahkan opsi subkategori berdasarkan kategori yang dipilih
         if (category === 'TKP') {
             addSubcategoryOptions(['Pelayanan Publik', 'Jejaring Kerja', 'Sosial Budaya', 'Teknologi Informasi', 'Profesionalisme', 'Anti Radikalisme']);
-        } else if (category === 'TIU') {
-            addSubcategoryOptions(['Nasionalisme', 'Integritas', 'Bela Negara', 'Pilar Negara', 'Bahasa Indonesia']);
         } else if (category === 'TWK') {
+            addSubcategoryOptions(['Nasionalisme', 'Integritas', 'Bela Negara', 'Pilar Negara', 'Bahasa Indonesia']);
+        } else if (category === 'TIU') {
             addSubcategoryOptions(['Analogi', 'Silogisme', 'Analitis', 'Perbandingan', 'Numerik', 'Deret', 'Ketidaksamaan', 'Serial']);
         }
     });
