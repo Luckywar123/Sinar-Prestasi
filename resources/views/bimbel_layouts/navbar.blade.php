@@ -30,7 +30,7 @@
                         <a class="nav-link text-light" href="/siswa/dashboard">Dashboard</span></a>
                     </li>
                     <li class="nav-item active"> <!-- Jika tidak cocok, tampilkan seperti biasa -->
-                        <a class="nav-link text-light" href="javascript:void(0)">Riwayat</span></a>
+                        <a class="nav-link text-light" href="/siswa/riwayat-test">Riwayat</span></a>
                     </li>
                     <li class="nav-item mr-2">
                         <a class="nav-link text-light" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
