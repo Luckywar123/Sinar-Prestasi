@@ -39,7 +39,7 @@ class User extends Authenticatable
 
     public function student()
     {
-        return $this->hasMany('App\Models\Student', 'user_id');
+        return $this->hasOne('App\Models\Student', 'user_id');
     }
 
     public function question()

@@ -8,7 +8,10 @@ use App\Models\ExamAnswer;
 use App\Models\Student;
 use App\Models\Answer;
 use App\Models\ExamToken;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 use function PHPUnit\Framework\isEmpty;
@@ -44,7 +47,15 @@ class SiswaController extends Controller
                     'exam_status'   => $current_status
                 ]);
 
-                $questions = Question::inRandomOrder()->where('category', $category)->limit(35)->get();
+                if($category == "TKP"){
+                    $limit = 45;
+                }else if($category == "TIU"){
+                    $limit = 35;
+                }else if($category == "TWK"){
+                    $limit = 30;
+                }
+
+                $questions = Question::inRandomOrder()->where('category', $category)->limit($limit)->get();
 
                 foreach($questions as $question){
                     try{
@@ -64,7 +75,7 @@ class SiswaController extends Controller
                 $examStart = $exam->exam_start;
 
                 // Tambahkan 70 menit ke waktu mulai ujian
-                $examEnd = Carbon::parse($examStart)->addMinutes(70);
+                $examEnd = Carbon::parse($examStart)->addMinutes(100);
 
                 // Hitung sisa waktu yang tersisa
                 $currentTime = Carbon::now();
@@ -84,7 +95,7 @@ class SiswaController extends Controller
             $examStart = $exam->exam_start;
 
             // Tambahkan 70 menit ke waktu mulai ujian
-            $examEnd = Carbon::parse($examStart)->addMinutes(70);
+            $examEnd = Carbon::parse($examStart)->addMinutes(100);
 
             // Hitung sisa waktu yang tersisa
             $currentTime = Carbon::now();
@@ -322,7 +333,7 @@ class SiswaController extends Controller
             $student        = Student::where('user_id', $user_id)->first();
             $current_time   = now();
             $current_status = 'Ongoing';
-            $categories = ['TKP', 'TIU', 'TWK'];
+            $categories = ['TWK', 'TIU', 'TKP'];
             $questions = collect(); // Inisialisasi koleksi untuk menyimpan semua pertanyaan
             $current_exam   = Exam::where('student_id', $student->student_id)
                                 ->where('exam_type', 'Test')
@@ -339,10 +350,18 @@ class SiswaController extends Controller
                     ]);
 
                     foreach ($categories as $category) {
+
+                        if($category == "TKP"){
+                            $limit = 45;
+                        }else if($category == "TIU"){
+                            $limit = 35;
+                        }else if($category == "TWK"){
+                            $limit = 30;
+                        }
                         // Mengambil 35 pertanyaan untuk setiap kategori
                         $questionsPerCategory = Question::inRandomOrder()
                                                         ->where('category', $category)
-                                                        ->limit(35)
+                                                        ->limit($limit)
                                                         ->get();
 
                         // Menggabungkan pertanyaan dari setiap kategori ke dalam koleksi utama
@@ -367,7 +386,7 @@ class SiswaController extends Controller
                     $examStart = $exam->exam_start;
 
                     // Tambahkan 70 menit ke waktu mulai ujian
-                    $examEnd = Carbon::parse($examStart)->addMinutes(120);
+                    $examEnd = Carbon::parse($examStart)->addMinutes(100);
 
                     // Hitung sisa waktu yang tersisa
                     $currentTime = Carbon::now();
@@ -386,7 +405,7 @@ class SiswaController extends Controller
                 $examStart = $exam->exam_start;
 
                 // Tambahkan 70 menit ke waktu mulai ujian
-                $examEnd = Carbon::parse($examStart)->addMinutes(120);
+                $examEnd = Carbon::parse($examStart)->addMinutes(100);
 
                 // Hitung sisa waktu yang tersisa
                 $currentTime = Carbon::now();
@@ -395,5 +414,51 @@ class SiswaController extends Controller
                 return view('siswa.latihan', compact('questions', 'remainingTime'));
             }
         }
+    }
+
+    public function ubahProfil($user_id){
+        $student_data = User::with('student')->findOrFail($user_id);
+        return view('siswa.ubah_profil', ["student_data" => $student_data]);
+    }
+
+    public function updateProfil($student_id, Request $request){
+        $auth = Auth::user();
+
+        $user = User::findOrFail($auth->user_id);
+
+        // Update data lainnya
+        $user->full_name    = $request->full_name;
+        $user->username     = $request->username;
+        $user->email        = $request->email;
+
+        // Jika password baru diisi, enkripsi dan simpan
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        $student = Student::findOrFail($student_id);
+
+        // Update data lainnya
+        $student->birth_place   = $request->birth_place;
+        $student->birth_date    = $request->birth_date;
+        $student->gender        = $request->gender;
+        $student->address       = $request->address;
+        $student->school_name   = $request->school_name;
+
+        if ($request->hasFile('profile_image')) {
+            $path = $request->file('profile_image')->storeAs(
+                'public/profile_image', $request->file('profile_image')->getClientOriginalName()
+            );
+
+            $path = str_replace('public/', '', $path);
+            $student->profile_image_url = $path;
+        }
+
+        $student->save();
+
+        return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
+
     }
 }
