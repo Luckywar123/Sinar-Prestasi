@@ -209,21 +209,21 @@ class GuruController extends Controller
                 }
             }
 
-            if ($tkpScore >= 100) {
+            if ($tkpScore >= 166) {
                 $tkpLulus += 1;
-            }else if ($tkpScore <= 100) {
+            }else if ($tkpScore < 166) {
                 $tkpTidakLulus += 1;
             }
 
-            if ($twkScore >= 100) {
+            if ($twkScore >= 65) {
                 $twkLulus += 1;
-            }else if ($twkScore <= 100) {
+            }else if ($twkScore < 65) {
                 $twkTidakLulus += 1;
             }
 
-            if ($tiuScore >= 100) {
+            if ($tiuScore >= 80) {
                 $tiuLulus += 1;
-            }else if ($tiuScore <= 100) {
+            }else if ($tiuScore < 80) {
                 $tiuTidakLulus += 1;
             }
         }
