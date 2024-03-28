@@ -19,71 +19,76 @@
                 <th>Nilai</th>
             </thead>
             <tbody class="table-light" style="color: #1C4B8F">
-                @foreach ($topExams as $key => $data)
-                <tr>
-                    <td class="align-middle text-center">{{ $key + 1 }}</td>
-                    <td class="align-middle">{{ $data->student->student_number }}</td>
-                    <td class="align-middle">{{ $data->student->user->full_name }}</td>
-                    <td class="align-middle text-center">{{ $data->exam_score }}</td>
-                </tr>
-                @endforeach
-
+                @if(isset($topExams) && $topExams->count() > 0)
+                    @foreach ($topExams as $key => $data)
+                    <tr>
+                        <td class="align-middle text-center">{{ $key + 1 }}</td>
+                        <td class="align-middle">{{ $data->student->student_number }}</td>
+                        <td class="align-middle">{{ $data->student->user->full_name }}</td>
+                        <td class="align-middle text-center">{{ $data->exam_score }}</td>
+                    </tr>
+                    @endforeach
+                @else
+                    <td colspan="4" class="text-center">Tidak ada data yang tersedia untuk token aktif.</td>
+                @endif
             </tbody>
         </table>
     </div>
 
-    <div class="col-8">
-        <div class="card p-4" style="border-radius: 0.7rem">
-            <canvas id="siswaStatistikChart" width="400" height="200"></canvas>
+    @if(isset($topExams) && $topExams->count() > 0)
+        <div class="col-8">
+            <div class="card p-4" style="border-radius: 0.7rem">
+                <canvas id="siswaStatistikChart" width="400" height="200"></canvas>
+            </div>
         </div>
-    </div>
-    <div class="col-4">
-        <div class="card p-4" style="height: 424px;" style="border-radius: 0.7rem">
-                <h4 class="card-title fw-semibold mb-4">Hasil Ujian Siswa</h4>
-                <div class="row mt-2 fs-5">
-                    <div class="col-3">
-                        TKP &nbsp;:
+        <div class="col-4">
+            <div class="card p-4" style="height: 424px;" style="border-radius: 0.7rem">
+                    <h4 class="card-title fw-semibold mb-4">Hasil Ujian Siswa</h4>
+                    <div class="row mt-2 fs-5">
+                        <div class="col-3">
+                            TKP &nbsp;:
+                        </div>
+                        <div class="col-9">
+                            {{ $tkpTidakLulus }} Siswa tidak lulus
+                        </div>
+                        <div class="col-3"></div>
+                        <div class="col-9">
+                            {{ $tkpLulus }} Siswa Lulus
+                        </div>
                     </div>
-                    <div class="col-9">
-                        {{ $tkpTidakLulus }} Siswa tidak lulus
+                    <div class="row mt-2 fs-5">
+                        <div class="col-3">
+                            TIU &nbsp;&nbsp;:
+                        </div>
+                        <div class="col-9">
+                            {{ $tiuTidakLulus }} Siswa tidak lulus
+                        </div>
+                        <div class="col-3"></div>
+                        <div class="col-9">
+                            {{ $tiuLulus }} Siswa Lulus
+                        </div>
                     </div>
-                    <div class="col-3"></div>
-                    <div class="col-9">
-                        {{ $tkpLulus }} Siswa Lulus
+                    <div class="row mt-2 fs-5">
+                        <div class="col-3">
+                            TWK :
+                        </div>
+                        <div class="col-9">
+                            {{ $twkTidakLulus }} Siswa tidak lulus
+                        </div>
+                        <div class="col-3"></div>
+                        <div class="col-9">
+                            {{ $twkLulus }} Siswa Lulus
+                        </div>
                     </div>
-                </div>
-                <div class="row mt-2 fs-5">
-                    <div class="col-3">
-                        TIU &nbsp;&nbsp;:
+                    <div class="row mt-2 mx-1 mt-5 fs-5">
+                        <div class="col-2" style="background-color: #2F6BB3">.</div>
+                        <div class="col-3">Lulus</div>
+                        <div class="col-2" style="background-color: #FF4D3D">.</div>
+                        <div class="col-5">Tidak Lulus</div>
                     </div>
-                    <div class="col-9">
-                        {{ $tiuTidakLulus }} Siswa tidak lulus
-                    </div>
-                    <div class="col-3"></div>
-                    <div class="col-9">
-                        {{ $tiuLulus }} Siswa Lulus
-                    </div>
-                </div>
-                <div class="row mt-2 fs-5">
-                    <div class="col-3">
-                        TWK :
-                    </div>
-                    <div class="col-9">
-                        {{ $twkTidakLulus }} Siswa tidak lulus
-                    </div>
-                    <div class="col-3"></div>
-                    <div class="col-9">
-                        {{ $twkLulus }} Siswa Lulus
-                    </div>
-                </div>
-                <div class="row mt-2 mx-1 mt-5 fs-5">
-                    <div class="col-2" style="background-color: #2F6BB3">.</div>
-                    <div class="col-3">Lulus</div>
-                    <div class="col-2" style="background-color: #FF4D3D">.</div>
-                    <div class="col-5">Tidak Lulus</div>
-                </div>
+            </div>
         </div>
-    </div>
+    @endif
 </div>
 @endsection
 

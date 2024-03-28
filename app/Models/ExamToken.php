@@ -11,7 +11,7 @@ class ExamToken extends Model
 
     protected $table        = 'exam_tokens';
     protected $primaryKey   = 'exam_token_id';
-    protected $fillable     = ['date_start', 'date_finish', 'token', 'user_id'];
+    protected $fillable     = ['date_start', 'date_finish', 'token', 'user_id', 'status'];
 
     public function user()
     {
