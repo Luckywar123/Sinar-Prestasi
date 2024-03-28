@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light py-3 px-5" style="background-color: #5DB6FA;">
     <div class="container-fluid">
-        <a class="navbar-brand ml-auto" href="#">
+        <a class="navbar-brand ml-auto" href="/siswa/dashboard">
             <img src="{{ asset('assets/logo.png') }}" width="36" height="36" alt="Logo">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
@@ -16,16 +16,21 @@
                             </span>
                         </p>
                     </li>
+
                     <li class="nav-item">
                         <p class="nav-link">
                             <span class="fw-semibold" style="color: #DFF8FD; font-size: 20px;">
+                                -&nbsp;&nbsp;&nbsp;
                                 <?php echo auth()->user()->full_name ?>
                             </span>
                         </p>
                     </li>
                 @else
                     <li class="nav-item active"> <!-- Jika tidak cocok, tampilkan seperti biasa -->
-                        <a class="nav-link text-light" href="/siswa/home">Score</span></a>
+                        <a class="nav-link text-light" href="/siswa/dashboard">Dashboard</span></a>
+                    </li>
+                    <li class="nav-item active"> <!-- Jika tidak cocok, tampilkan seperti biasa -->
+                        <a class="nav-link text-light" href="javascript:void(0)">Riwayat</span></a>
                     </li>
                     <li class="nav-item mr-2">
                         <a class="nav-link text-light" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>

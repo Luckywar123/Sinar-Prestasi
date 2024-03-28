@@ -216,13 +216,16 @@ class SiswaController extends Controller
 
             if($category_data == "TKP"){
                 $category = "Tes Karakteristik Pribadi (TKP)";
+                $limit = 45;
             }else if($category_data == "TIU"){
                 $category = "Tes Intelegensi Umum (TIU)";
+                $limit = 35;
             }else if($category_data == "TWK"){
                 $category = "Tes Wawasan Kebangsaan (TWK)";
+                $limit = 30;
             }
 
-            $is_true = 35 - $is_false_count;
+            $is_true = $limit - $is_false_count;
 
             $exam_scores = $exam_answers->sum(function ($exam_answer) {
                 return $exam_answer->answer->answer_score ?? 0;
@@ -232,7 +235,7 @@ class SiswaController extends Controller
 
             $data = (object) [
                 'Category'   => $category,
-                'Total_Soal'  => 35,
+                'Total_Soal'  => $limit,
                 'Jawaban_Benar' => $is_true,
                 'Nilai' => $exam_scores,
                 'Type' => $category_data
@@ -277,8 +280,6 @@ class SiswaController extends Controller
             $data["Type"] = "Test";
 
         }
-
-        // dd($data);
 
         // Kirim data ke view
         return view('siswa.nilai', ['data' => $data, 'overall_score' => $overall_score]);
