@@ -33,8 +33,9 @@ class SiswaController extends Controller
         $student        = Student::where('user_id', $user_id)->first();
         $current_time   = now();
         $current_status = 'Ongoing';
+        $exam_type      = 'Simulasi';
         $current_exam   = Exam::where('student_id', $student->student_id)
-                            ->where('exam_type', 'Simulasi')
+                            ->where('exam_type', $exam_type)
                             ->where('exam_status', $current_status)
                             ->get();
 
@@ -55,7 +56,11 @@ class SiswaController extends Controller
                     $limit = 30;
                 }
 
-                $questions = Question::inRandomOrder()->where('category', $category)->limit($limit)->get();
+                $questions = Question::inRandomOrder()
+                                ->where('exam_type', $exam_type)
+                                ->where('category', $category)
+                                ->limit($limit)
+                                ->get();
 
                 foreach($questions as $question){
                     try{
@@ -334,7 +339,8 @@ class SiswaController extends Controller
             $student        = Student::where('user_id', $user_id)->first();
             $current_time   = now();
             $current_status = 'Ongoing';
-            $categories = ['TWK', 'TIU', 'TKP'];
+            $categories     = ['TWK', 'TIU', 'TKP'];
+            $exam_type      = "Test";
             $questions = collect(); // Inisialisasi koleksi untuk menyimpan semua pertanyaan
             $current_exam   = Exam::where('student_id', $student->student_id)
                                 ->where('exam_type', 'Test')
@@ -344,7 +350,7 @@ class SiswaController extends Controller
             if($current_exam->isEmpty()){
                 try {
                     $exam = Exam::create([
-                        'exam_type'     => "Test",
+                        'exam_type'     => $exam_type,
                         'student_id'    => $student->student_id,
                         'exam_start'    => $current_time,
                         'exam_status'   => $current_status,
@@ -362,6 +368,7 @@ class SiswaController extends Controller
                         }
                         // Mengambil 35 pertanyaan untuk setiap kategori
                         $questionsPerCategory = Question::inRandomOrder()
+                                                        ->where('exam_type', $exam_type)
                                                         ->where('category', $category)
                                                         ->limit($limit)
                                                         ->get();

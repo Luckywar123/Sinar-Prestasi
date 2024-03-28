@@ -30,7 +30,15 @@
                     <td>{{ $k +1 }}</td>
                     <td>{{ \Carbon\Carbon::parse($exam->exam_start)->format('d M Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($exam->exam_start)->format('H:m:s') }}</td>
-                    <td>{{ $exam -> exam_type }}</td>
+                    <td>
+                        @if ($exam->exam_type == "Simulasi")
+                            Latihan Soal
+                        @elseif($exam->exam_type == "Test")
+                            Simulasi CAT
+                        @else
+                            Uncategorized
+                        @endif
+                    </td>
                     <td>{{ $exam -> exam_score }}</td>
                     <td>
                         @if ($exam->exam_type == "Test")
