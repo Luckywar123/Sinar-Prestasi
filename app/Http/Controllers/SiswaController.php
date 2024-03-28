@@ -216,13 +216,16 @@ class SiswaController extends Controller
 
             if($category_data == "TKP"){
                 $category = "Tes Karakteristik Pribadi (TKP)";
+                $limit = 45;
             }else if($category_data == "TIU"){
                 $category = "Tes Intelegensi Umum (TIU)";
+                $limit = 35;
             }else if($category_data == "TWK"){
                 $category = "Tes Wawasan Kebangsaan (TWK)";
+                $limit = 30;
             }
 
-            $is_true = 35 - $is_false_count;
+            $is_true = $limit - $is_false_count;
 
             $exam_scores = $exam_answers->sum(function ($exam_answer) {
                 return $exam_answer->answer->answer_score ?? 0;
@@ -232,7 +235,7 @@ class SiswaController extends Controller
 
             $data = (object) [
                 'Category'   => $category,
-                'Total_Soal'  => 35,
+                'Total_Soal'  => $limit,
                 'Jawaban_Benar' => $is_true,
                 'Nilai' => $exam_scores,
                 'Type' => $category_data
@@ -277,8 +280,6 @@ class SiswaController extends Controller
             $data["Type"] = "Test";
 
         }
-
-        // dd($data);
 
         // Kirim data ke view
         return view('siswa.nilai', ['data' => $data, 'overall_score' => $overall_score]);
@@ -422,43 +423,53 @@ class SiswaController extends Controller
     }
 
     public function updateProfil($student_id, Request $request){
-        $auth = Auth::user();
+        try {
+            $auth = Auth::user();
 
-        $user = User::findOrFail($auth->user_id);
+            $user = User::findOrFail($auth->user_id);
 
-        // Update data lainnya
-        $user->full_name    = $request->full_name;
-        $user->username     = $request->username;
-        $user->email        = $request->email;
+            // Update data lainnya
+            $user->full_name    = $request->full_name;
+            $user->username     = $request->username;
+            $user->email        = $request->email;
 
-        // Jika password baru diisi, enkripsi dan simpan
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            // Jika password baru diisi, enkripsi dan simpan
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+
+            $user->save();
+
+            try {
+                $student = Student::findOrFail($student_id);
+
+                // Update data lainnya
+                $student->birth_place   = $request->birth_place;
+                $student->birth_date    = $request->birth_date;
+                $student->gender        = $request->gender;
+                $student->address       = $request->address;
+                $student->school_name   = $request->school_name;
+
+                if ($request->hasFile('profile_image')) {
+                    $path = $request->file('profile_image')->storeAs(
+                        'public/profile_image', $request->file('profile_image')->getClientOriginalName()
+                    );
+
+                    $path = str_replace('public/', '', $path);
+                    $student->profile_image_url = $path;
+                }
+
+                $student->save();
+
+                $request->session()->flash('success', 'Profil berhasil diperbarui.');
+                return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
+            }catch (\Exception $e) {
+                $request->session()->flash('error', 'Terjadi kesalahan saat memperbaharaui data siswa.');
+                return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
+            }
+        } catch (\Exception $e) {
+            $request->session()->flash('error', 'Terjadi kesalahan saat memperbaharaui akun siswa.');
+                return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
         }
-
-        $user->save();
-
-        $student = Student::findOrFail($student_id);
-
-        // Update data lainnya
-        $student->birth_place   = $request->birth_place;
-        $student->birth_date    = $request->birth_date;
-        $student->gender        = $request->gender;
-        $student->address       = $request->address;
-        $student->school_name   = $request->school_name;
-
-        if ($request->hasFile('profile_image')) {
-            $path = $request->file('profile_image')->storeAs(
-                'public/profile_image', $request->file('profile_image')->getClientOriginalName()
-            );
-
-            $path = str_replace('public/', '', $path);
-            $student->profile_image_url = $path;
-        }
-
-        $student->save();
-
-        return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
-
     }
 }

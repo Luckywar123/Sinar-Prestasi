@@ -1,5 +1,16 @@
 @extends('bimbel_layouts.master')
 
+@section('style')
+<style>
+    body {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE 10+/Edge */
+    user-select: none; /* Standard */
+}
+</style>
+@endsection
+
 @section('content')
     <div class="mt-3 w-100 h-100">
         <div class="card rounded-5 mx-4">
