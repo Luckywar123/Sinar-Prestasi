@@ -95,7 +95,22 @@ class GuruController extends Controller
     public function recapDataSiswa() {
         $exams  = Exam::with('exam_answer')->get();
 
-        return view('guru.rekap', ["exams" => $exams]);
+        $months = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+
+        return view('guru.rekap', ["exams" => $exams, "months" => $months]);
     }
 
     public function generateToken(Request $request, $length = 6) {
@@ -133,8 +148,6 @@ class GuruController extends Controller
             'data'    => $token
         ], 201);
     }
-
-
 
     public function getToken() {
         //Gete user_id from auth session
@@ -316,5 +329,36 @@ class GuruController extends Controller
 
         // Menyimpan atau menawarkan file PDF untuk diunduh oleh pengguna
         return $dompdf->stream('data_cetak.pdf');
+    }
+
+    public function filterRecap(Request$request){
+        $exams  = Exam::with('exam_answer')->get();
+
+
+
+        $monthFilter = $request->input('month_filter');
+
+        // dd(date('m', strtotime(($monthFilter))));
+
+        $exams = Exam::with('exam_answer')
+            ->whereMonth('created_at', $monthFilter)
+            ->get();
+
+        $months = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+
+        return view('guru.rekap', ["exams" => $exams, "months" => $months]);
     }
 }
