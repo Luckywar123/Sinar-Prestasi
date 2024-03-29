@@ -330,7 +330,7 @@ class SiswaController extends Controller
 
     public function startTest(Request $request){
         $token          = $request->token;
-        $token_data     = ExamToken::where('token', $token)->first();
+        $token_data     = ExamToken::where('token', $token)->WHERE('status', 'Simulasi')->first();
 
 
         if(empty($token_data)){
@@ -498,5 +498,31 @@ class SiswaController extends Controller
         $student    = Student::WHERE('user_id', $user_id)->first();
         $exams      = Exam::WHERE('student_id', $student->student_id)->ORDERBY('created_at', 'DESC')->get();
         return view('siswa.riwayat', ['exams' => $exams]);
+    }
+
+    public function downloadSoal(Request $request){
+        $token = $request->token;
+        $exam_id = $request->exam_id;
+
+        $token_data = ExamToken::where('token', $token)->where('status', 'Download')->first();
+
+        if(empty($token_data)){
+            return redirect()->back()->with('error', 'Token yang Anda masukkan tidak valid')->withInput();
+        } else {
+            $auth = Auth::user();
+            $student = Student::where('user_id', $auth->user_id)->first();
+
+            $exam = Exam::where('student_id', $student->student_id)->where('exam_id', $exam_id)->first();
+            $questions = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
+
+            // Redirect to printSoal route with questions data
+            return view('siswa.print-soal', compact('questions'));
+        }
+    }
+
+    public function printSoal($questions){
+        // Here, $questions will be an array of ExamAnswer objects with nested question and answer relations
+        // You can further process this data or pass it to a view as needed
+        return view('siswa.print-soal', compact('questions'));
     }
 }

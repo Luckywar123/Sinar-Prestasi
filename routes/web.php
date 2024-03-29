@@ -71,6 +71,8 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('update-profile/{student_id}', [SiswaController::class, 'updateProfil'])->name('updateProfil');
 
         Route::get('riwayat-test', [SiswaController::class, 'riwayatTest'])->name('riwayatTest');
+        Route::post('download-soal', [SiswaController::class, 'downloadSoal'])->name('downloadSoal');
+        Route::get('print-soal', [SiswaController::class, 'printSoal'])->name('printSoal');
     });
 
     Route::prefix('guru')->group(function () {
