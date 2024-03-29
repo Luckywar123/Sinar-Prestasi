@@ -98,9 +98,12 @@ class GuruController extends Controller
         return view('guru.rekap', ["exams" => $exams]);
     }
 
-    public function generateToken($length = 6) {
-        //Gete user_id from auth session
+    public function generateToken(Request $request, $length = 6) {
+        // Get user_id from auth session
         $user_id = auth()->user()->user_id;
+
+        // Ambil status dari request
+        $status = $request->input('status', 'Simulasi');
 
         // Karakter yang diizinkan untuk digunakan dalam token
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -112,16 +115,16 @@ class GuruController extends Controller
             $token .= $characters[mt_rand(0, $maxIndex)];
         }
 
-        $currentToken = ExamToken::where('user_id', $user_id)->WHERE('status', 'Simulasi')->first();
+        $currentToken = ExamToken::where('user_id', $user_id)->where('status', $status)->first();
 
-        if(!empty($currentToken)){
+        if (!empty($currentToken)) {
             ExamToken::destroy($currentToken->exam_token_id);
         }
 
         ExamToken::create([
             'token'     => $token,
             'user_id'   => $user_id,
-            'status'    => 'Simulasi'
+            'status'    => $status
         ]);
 
         return response()->json([
@@ -131,22 +134,18 @@ class GuruController extends Controller
         ], 201);
     }
 
+
+
     public function getToken() {
         //Gete user_id from auth session
         $user_id = auth()->user()->user_id;
 
-        $currentToken = ExamToken::where('user_id', $user_id)->WHERE('status', 'Simulasi')->first();
-
-        if(empty($currentToken)){
-            $token = '-';
-        }else{
-            $token = $currentToken->token;
-        }
+        $tokens = ExamToken::where('user_id', $user_id)->get();
 
         return response()->json([
             'status'  => "Success",
             'message' => 'Data token',
-            'data'    => $token
+            'data'    => $tokens
         ], 200);
     }
 

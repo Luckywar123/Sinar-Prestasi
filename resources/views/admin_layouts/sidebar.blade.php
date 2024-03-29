@@ -24,12 +24,22 @@
 
         <div class="row mt-5">
             <div class="col-12 my-2">
-                <span id="token" class="mx-2">Token :</span>
+                <span id="token-Simulasi" class="mx-2">Token CAT :</span>
             </div>
             <div class="col-12">
-                <button class="mx-2 btn btn-sm btn-warning" onclick="regenerateToken()" style="background-color: #5DB6FA; color: #FFFFFF; border-color:#5DB6FA">Regenerate Token</button>
+                <button class="mx-2 btn btn-sm btn-warning" onclick="regenerateToken('Simulasi', 'token-Simulasi')" style="background-color: #5DB6FA; color: #FFFFFF; border-color:#5DB6FA">Regenerate Token</button>
             </div>
         </div>
+        <div class="row mt-5">
+            <div class="col-12 my-2">
+                <span id="token-Download" class="mx-2">Token Download:</span>
+            </div>
+            <div class="col-12">
+                <button class="mx-2 btn btn-sm btn-warning" onclick="regenerateToken('Download', 'token-Download')" style="background-color: #5DB6FA; color: #FFFFFF; border-color:#5DB6FA">Regenerate Token</button>
+            </div>
+        </div>
+
+
         @endif
     </ul>
 </div>
