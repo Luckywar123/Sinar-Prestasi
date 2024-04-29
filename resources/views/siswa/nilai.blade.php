@@ -67,13 +67,13 @@
 
             @if(count($scoresArray) == 1)
                 <a href="/siswa/simulasi/{{ $data->Type }}">
-                    <button class="btn btn-md btn-secondary fw-semibold" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
+                    <button class="btn btn-md btn-secondary fw-semibold" style="width:180px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
                         Ulang Simulasi
                     </button>
                 </a>
             @endif
             <a href="/siswa/dashboard" class="ms-auto ">
-                <button class="btn btn-md btn-secondary fw-semibold" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
+                <button class="btn btn-md btn-secondary fw-semibold" style="width:180px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
                     Main Menu
                 </button>
             </a>

@@ -30,10 +30,6 @@ Route::get('/home', function () {
     return view('siswa/home');
 });
 
-Route::get('/daftar', function () {
-    return view('siswa/daftar');
-});
-
 Route::get('/konsultasi', function () {
     return view('siswa/konsultasi');
 });
@@ -65,7 +61,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('simpan-jawaban-simulasi/{exam_answer_id}', [SiswaController::class, 'simpanJawabanSimulasi'])->name('simpanJawabanSimulasi');
         Route::post('selesai-simulasi', [SiswaController::class, 'selesaiSimulasi'])->name('selesaiSimulasi');
 
-        // Route::post('start-test', [SiswaController::class, 'startTest'])->name('startTest');
         Route::post('start-test', [SiswaController::class, 'startTest'])->name('startTest');
 
         Route::get('after-test/{exam_id}', [SiswaController::class, 'afterTest'])->name('afterTest');
@@ -75,13 +70,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('ubah-profil/{user_id}', [SiswaController::class, 'ubahProfil'])->name('ubahProfil');
         Route::patch('update-profile/{student_id}', [SiswaController::class, 'updateProfil'])->name('updateProfil');
 
-        Route::get('/nilai', function () {
-            return view('siswa/nilai');
-        });
-
-        Route::get('/profil', function () {
-            return view('siswa/profil');
-        });
+        Route::get('riwayat-test', [SiswaController::class, 'riwayatTest'])->name('riwayatTest');
+        Route::post('download-soal', [SiswaController::class, 'downloadSoal'])->name('downloadSoal');
+        Route::get('print-soal', [SiswaController::class, 'printSoal'])->name('printSoal');
     });
 
     Route::prefix('guru')->group(function () {
@@ -100,8 +91,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('print-statistik', [GuruController::class, 'printStatistik'])->name('printStatistik');
 
-        Route::get('/statistik', function () {
-            return view('guru/statistik');
-        });
+        Route::get('filter-by-month', [GuruController::class, 'filterRecap'])->name('filter-by-month');
     });
 });

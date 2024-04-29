@@ -48,9 +48,16 @@
                     </button>
 
 
+<<<<<<< Updated upstream
+                    <button type="button" class="form-control btn btn-lg rounded-pill px-2 my-2 w-75 shadow no-border" style="background-color: #0092ff; color: #ffffff;">
+                        <i class="fab fa-facebook fa-bounce mr-2"></i>
+                        <a style="color: #ffffff; text-decoration: none;" href="https://www.facebook.com/profile.php?id=61557157866649." target="_blank"> Check Our Facebook</a>
+
+=======
                     <button type="button" class="form-control btn btn-lg rounded-pill px-4 my-4 w-75" style="background-color: #ffffff; color: #0092ff; border: 2px solid black ;">
                         <i class="fab fa-facebook-f fa-shake mr-4"></i><a href="https://www.facebook.com/gaktausiapaya."> Check Our Facebook</a>
                         
+>>>>>>> Stashed changes
                     </button>
 
                 </div>

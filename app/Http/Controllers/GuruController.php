@@ -95,12 +95,30 @@ class GuruController extends Controller
     public function recapDataSiswa() {
         $exams  = Exam::with('exam_answer')->get();
 
-        return view('guru.rekap', ["exams" => $exams]);
+        $months = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+
+        return view('guru.rekap', ["exams" => $exams, "months" => $months]);
     }
 
-    public function generateToken($length = 6) {
-        //Gete user_id from auth session
+    public function generateToken(Request $request, $length = 6) {
+        // Get user_id from auth session
         $user_id = auth()->user()->user_id;
+
+        // Ambil status dari request
+        $status = $request->input('status', 'Simulasi');
 
         // Karakter yang diizinkan untuk digunakan dalam token
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -112,20 +130,17 @@ class GuruController extends Controller
             $token .= $characters[mt_rand(0, $maxIndex)];
         }
 
-        $currentToken = ExamToken::where('user_id', $user_id)->first();
+        $currentToken = ExamToken::where('user_id', $user_id)->where('status', $status)->first();
 
-        if(empty($currentToken)){
-            ExamToken::create([
-                'token'     => $token,
-                'user_id'   => $user_id
-            ]);
-        }else {
+        if (!empty($currentToken)) {
             ExamToken::destroy($currentToken->exam_token_id);
-            ExamToken::create([
-                'token'     => $token,
-                'user_id'   => $user_id
-            ]);
         }
+
+        ExamToken::create([
+            'token'     => $token,
+            'user_id'   => $user_id,
+            'status'    => $status
+        ]);
 
         return response()->json([
             'status'  => "Success",
@@ -138,18 +153,12 @@ class GuruController extends Controller
         //Gete user_id from auth session
         $user_id = auth()->user()->user_id;
 
-        $currentToken = ExamToken::where('user_id', $user_id)->first();
-
-        if(empty($currentToken)){
-            $token = '-';
-        }else{
-            $token = $currentToken->token;
-        }
+        $tokens = ExamToken::where('user_id', $user_id)->get();
 
         return response()->json([
             'status'  => "Success",
             'message' => 'Data token',
-            'data'    => $token
+            'data'    => $tokens
         ], 200);
     }
 
@@ -161,7 +170,15 @@ class GuruController extends Controller
         $twkLulus       = 0;
         $twkTidakLulus  = 0;
 
+        $token_data     = ExamToken::WHERE('status', 'Simulasi')->first();
+
+        if (!$token_data) {
+            // Meneruskan ke halaman tujuan dengan nilai default
+            return view('guru.statistik', compact('tkpLulus', 'tkpTidakLulus', 'tiuLulus', 'tiuTidakLulus', 'twkLulus', 'twkTidakLulus'));
+        }
+
         $topExams = Exam::where('exam_type', 'Test') // Filter exam_type = 'Test'
+                ->WHERE('token', $token_data->token)
                 ->orderBy('exam_score', 'desc') // Urutkan berdasarkan exam_score secara descending
                 ->take(5) // Ambil 5 nilai tertinggi
                 ->get(); // Ambil hasil
@@ -169,6 +186,7 @@ class GuruController extends Controller
         $examData = Exam::where('exam_type', 'Test')
                     ->with('exam_answer')
                     ->with('exam_answer.question')
+                    ->WHERE('token', $token_data->token)
                     ->get();
 
         foreach($examData as $data){
@@ -203,21 +221,21 @@ class GuruController extends Controller
                 }
             }
 
-            if ($tkpScore >= 100) {
+            if ($tkpScore >= 166) {
                 $tkpLulus += 1;
-            }else if ($tkpScore <= 100) {
+            }else if ($tkpScore < 166) {
                 $tkpTidakLulus += 1;
             }
 
-            if ($twkScore >= 100) {
+            if ($twkScore >= 65) {
                 $twkLulus += 1;
-            }else if ($twkScore <= 100) {
+            }else if ($twkScore < 65) {
                 $twkTidakLulus += 1;
             }
 
-            if ($tiuScore >= 100) {
+            if ($tiuScore >= 80) {
                 $tiuLulus += 1;
-            }else if ($tiuScore <= 100) {
+            }else if ($tiuScore < 80) {
                 $tiuTidakLulus += 1;
             }
         }
@@ -311,5 +329,36 @@ class GuruController extends Controller
 
         // Menyimpan atau menawarkan file PDF untuk diunduh oleh pengguna
         return $dompdf->stream('data_cetak.pdf');
+    }
+
+    public function filterRecap(Request$request){
+        $exams  = Exam::with('exam_answer')->get();
+
+
+
+        $monthFilter = $request->input('month_filter');
+
+        // dd(date('m', strtotime(($monthFilter))));
+
+        $exams = Exam::with('exam_answer')
+            ->whereMonth('created_at', $monthFilter)
+            ->get();
+
+        $months = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+
+        return view('guru.rekap', ["exams" => $exams, "months" => $months]);
     }
 }

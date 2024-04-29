@@ -77,23 +77,32 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('token').innerHTML = `Token : ${data.data}`
+                const tokens = data.data; // Ambil semua data token
+                tokens.forEach(token => {
+                    const tokenElement = document.getElementById(`token-${token.status}`);
+                    if (tokenElement) {
+                        tokenElement.innerHTML = `Token ${token.status}: ${token.token}`;
+                    }
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
             });
         };
 
-        function regenerateToken() {
+        function regenerateToken(status, elementId) {
             fetch('{{ route("generateToken") }}', {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: status })
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('token').innerHTML = `Token : ${data.data}`
+                var tokenElement = document.getElementById(elementId);
+                tokenElement.innerHTML = `Token ${status}: ${data.data}`;
             })
             .catch(error => {
                 console.error('Error:', error);

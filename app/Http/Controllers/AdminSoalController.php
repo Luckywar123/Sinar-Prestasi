@@ -7,6 +7,7 @@ use App\Models\Question;
 use App\Models\Answer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AdminSoalController extends Controller
 {
@@ -111,6 +112,17 @@ class AdminSoalController extends Controller
     public function simpanDetailSoal($question_id, Request $request)
     {
         try {
+            // Validasi input menggunakan Validator
+            $question_validation = Validator::make($request->all(), [
+                'question_text' => 'required|string|max:555',
+            ]);
+
+            // Cek jika validasi gagal
+            if ($question_validation->fails()) {
+                Question::destroy($question_id);
+                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan soal. Soal yang Anda masukkan melebihi 555 karakter.');
+            }
+
             $question = Question::findOrFail($question_id);
 
             // Update data lainnya
@@ -143,6 +155,19 @@ class AdminSoalController extends Controller
                         if($request->selectedOption == "text"){
                             $index = substr($key, strlen('textJawaban'));
                             $textJawaban = $request->input($key);
+
+                            // Validasi input menggunakan Validator
+                            $answer_validation = Validator::make(['textJawaban' => $textJawaban], [
+                                'textJawaban' => 'required|string|max:555',
+                            ]);
+
+                            // Cek jika validasi gagal
+                            if ($answer_validation->fails()) {
+                                Question::destroy($question_id);
+                                Answer::destroy($question_id);
+                                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan jawaban. Jawaban yang Anda masukkan melebihi 555 karakter.');
+                            }
+
                         }else if($request->selectedOption == "image"){
                             $index = substr($key, strlen('imageJawaban'));
                             $imageJawaban = $request->file($key);

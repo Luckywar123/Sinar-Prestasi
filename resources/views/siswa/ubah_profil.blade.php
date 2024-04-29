@@ -1,6 +1,63 @@
 @extends('bimbel_layouts.master')
 
 @section('content')
+
+@if (session('success'))
+    <!-- Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ session('success') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var myModal = new bootstrap.Modal(document.getElementById('successModal'));
+            myModal.show();
+        });
+    </script>
+    @endpush
+@elseif (session('error'))
+    <!-- Modal Error -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ session('error') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var myErrorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+            myErrorModal.show();
+        });
+    </script>
+    @endpush
+
+@endif
     <div class="row my-4 justify-content-center">
         <div class="col-lg-8">
             <div class="card rounded-5 mt-3 py-2">
@@ -96,7 +153,7 @@
                         </div>
                         <div class="form-group row mt-2">
                             <div class="col-sm-12">
-                                <button type="suvmit" class="btn btn-primary form-control" style="background-color: #5DB6FA; border-color:#5DB6FA">Simpan</button>
+                                <button type="submit" class="btn btn-primary form-control shadow" style="background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA"">Simpan</button>
                             </div>
                         </div>
                     </form>

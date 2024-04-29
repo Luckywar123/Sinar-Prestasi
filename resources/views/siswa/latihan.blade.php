@@ -237,5 +237,24 @@
     window.addEventListener('contextmenu', function (e) {
         e.preventDefault();
     });
+
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+            // Tab nonaktif, lakukan logout dengan metode POST
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("logout") }}'; // Ganti dengan route logout yang sesuai
+
+            // Tambahkan CSRF token ke dalam form
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}'; // Mendapatkan nilai CSRF token dari Laravel
+
+            form.appendChild(csrfToken);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
 </script>
 @endpush

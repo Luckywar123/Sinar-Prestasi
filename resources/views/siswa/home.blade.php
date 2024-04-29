@@ -3,8 +3,8 @@
 @section('background')
     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-           
-        <div class="image-container">
+
+            <div class="image-container">
 
             <div class="carousel-item active">
                 <img src="{{ asset('assets/background2.jpeg') }}" class="d-block w-100 img-opacity" alt="Background Image 2">
@@ -48,10 +48,10 @@
 @section('content')
     <div class="content mt-5" style ="padding-top: 250px; position: absolute;">
         <div class="row align-items-center">
-            <div class="col-md-2 "> 
+            <div class="col-md-2 ">
                 <img src="{{ asset('assets/logo.png') }}" alt="Logo" style="width: 100px; height: 100px" class="img-fluid">
             </div>
-            <div class="col-md-10 "> 
+            <div class="col-md-10 ">
             <h1 class="display-4 text-start fw-bold outlined-text" style="color: #5DB6FA; text-shadow: 2px 2px 4px #000000;">Bimbingan Belajar</h1>
             <p class="lead text-start fw-bold display-6" style="color: #0F3077">Sinar Prestasi</p>
             </div>

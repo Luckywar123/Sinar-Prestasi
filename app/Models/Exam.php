@@ -11,7 +11,7 @@ class Exam extends Model
 
     protected $table        = 'exams';
     protected $primaryKey   = 'exam_id';
-    protected $fillable     = ['exam_type', 'exam_score', 'student_id', 'exam_start', 'exam_finish', 'exam_status'];
+    protected $fillable     = ['exam_type', 'exam_score', 'student_id', 'exam_start', 'exam_finish', 'exam_status', 'token'];
 
     public function student()
     {

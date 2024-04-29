@@ -33,8 +33,9 @@ class SiswaController extends Controller
         $student        = Student::where('user_id', $user_id)->first();
         $current_time   = now();
         $current_status = 'Ongoing';
+        $exam_type      = 'Simulasi';
         $current_exam   = Exam::where('student_id', $student->student_id)
-                            ->where('exam_type', 'Simulasi')
+                            ->where('exam_type', $exam_type)
                             ->where('exam_status', $current_status)
                             ->get();
 
@@ -55,7 +56,11 @@ class SiswaController extends Controller
                     $limit = 30;
                 }
 
-                $questions = Question::inRandomOrder()->where('category', $category)->limit($limit)->get();
+                $questions = Question::inRandomOrder()
+                                ->where('exam_type', $exam_type)
+                                ->where('category', $category)
+                                ->limit($limit)
+                                ->get();
 
                 foreach($questions as $question){
                     try{
@@ -216,13 +221,16 @@ class SiswaController extends Controller
 
             if($category_data == "TKP"){
                 $category = "Tes Karakteristik Pribadi (TKP)";
+                $limit = 45;
             }else if($category_data == "TIU"){
                 $category = "Tes Intelegensi Umum (TIU)";
+                $limit = 35;
             }else if($category_data == "TWK"){
                 $category = "Tes Wawasan Kebangsaan (TWK)";
+                $limit = 30;
             }
 
-            $is_true = 35 - $is_false_count;
+            $is_true = $limit - $is_false_count;
 
             $exam_scores = $exam_answers->sum(function ($exam_answer) {
                 return $exam_answer->answer->answer_score ?? 0;
@@ -232,7 +240,7 @@ class SiswaController extends Controller
 
             $data = (object) [
                 'Category'   => $category,
-                'Total_Soal'  => 35,
+                'Total_Soal'  => $limit,
                 'Jawaban_Benar' => $is_true,
                 'Nilai' => $exam_scores,
                 'Type' => $category_data
@@ -278,8 +286,6 @@ class SiswaController extends Controller
 
         }
 
-        // dd($data);
-
         // Kirim data ke view
         return view('siswa.nilai', ['data' => $data, 'overall_score' => $overall_score]);
     }
@@ -323,8 +329,9 @@ class SiswaController extends Controller
     }
 
     public function startTest(Request $request){
-        $token = $request->token;
-        $token_data = ExamToken::where('token', $token)->first();
+        $token          = $request->token;
+        $token_data     = ExamToken::where('token', $token)->WHERE('status', 'Simulasi')->first();
+
 
         if(empty($token_data)){
             return redirect()->back()->with('error', 'Token yang Anda masukkan tidak valid')->withInput();
@@ -333,8 +340,19 @@ class SiswaController extends Controller
             $student        = Student::where('user_id', $user_id)->first();
             $current_time   = now();
             $current_status = 'Ongoing';
-            $categories = ['TWK', 'TIU', 'TKP'];
+            $categories     = ['TWK', 'TIU', 'TKP'];
+            $exam_type      = "Test";
             $questions = collect(); // Inisialisasi koleksi untuk menyimpan semua pertanyaan
+
+            $exam_status    = Exam::where('student_id', $student->student_id)
+                                ->where('exam_type', 'Test')
+                                ->where('token', $token)
+                                ->get();
+
+            if(!empty($exam_status)){
+                return redirect()->back()->with('error', 'Token yang Anda masukkan telah digunakan sebelumnya.')->withInput();
+            }
+
             $current_exam   = Exam::where('student_id', $student->student_id)
                                 ->where('exam_type', 'Test')
                                 ->where('exam_status', $current_status)
@@ -343,10 +361,11 @@ class SiswaController extends Controller
             if($current_exam->isEmpty()){
                 try {
                     $exam = Exam::create([
-                        'exam_type'     => "Test",
+                        'exam_type'     => $exam_type,
                         'student_id'    => $student->student_id,
                         'exam_start'    => $current_time,
-                        'exam_status'   => $current_status
+                        'exam_status'   => $current_status,
+                        'token'         => $token
                     ]);
 
                     foreach ($categories as $category) {
@@ -360,6 +379,7 @@ class SiswaController extends Controller
                         }
                         // Mengambil 35 pertanyaan untuk setiap kategori
                         $questionsPerCategory = Question::inRandomOrder()
+                                                        ->where('exam_type', $exam_type)
                                                         ->where('category', $category)
                                                         ->limit($limit)
                                                         ->get();
@@ -422,43 +442,87 @@ class SiswaController extends Controller
     }
 
     public function updateProfil($student_id, Request $request){
-        $auth = Auth::user();
+        try {
+            $auth = Auth::user();
 
-        $user = User::findOrFail($auth->user_id);
+            $user = User::findOrFail($auth->user_id);
 
-        // Update data lainnya
-        $user->full_name    = $request->full_name;
-        $user->username     = $request->username;
-        $user->email        = $request->email;
+            // Update data lainnya
+            $user->full_name    = $request->full_name;
+            $user->username     = $request->username;
+            $user->email        = $request->email;
 
-        // Jika password baru diisi, enkripsi dan simpan
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            // Jika password baru diisi, enkripsi dan simpan
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+
+            $user->save();
+
+            try {
+                $student = Student::findOrFail($student_id);
+
+                // Update data lainnya
+                $student->birth_place   = $request->birth_place;
+                $student->birth_date    = $request->birth_date;
+                $student->gender        = $request->gender;
+                $student->address       = $request->address;
+                $student->school_name   = $request->school_name;
+
+                if ($request->hasFile('profile_image')) {
+                    $path = $request->file('profile_image')->storeAs(
+                        'public/profile_image', $request->file('profile_image')->getClientOriginalName()
+                    );
+
+                    $path = str_replace('public/', '', $path);
+                    $student->profile_image_url = $path;
+                }
+
+                $student->save();
+
+                $request->session()->flash('success', 'Profil berhasil diperbarui.');
+                return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
+            }catch (\Exception $e) {
+                $request->session()->flash('error', 'Terjadi kesalahan saat memperbaharaui data siswa.');
+                return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
+            }
+        } catch (\Exception $e) {
+            $request->session()->flash('error', 'Terjadi kesalahan saat memperbaharaui akun siswa.');
+                return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
         }
+    }
 
-        $user->save();
+    public function riwayatTest(){
+        $auth       = Auth::user();
+        $user_id    = $auth->user_id;
+        $student    = Student::WHERE('user_id', $user_id)->first();
+        $exams      = Exam::WHERE('student_id', $student->student_id)->ORDERBY('created_at', 'DESC')->get();
+        return view('siswa.riwayat', ['exams' => $exams]);
+    }
 
-        $student = Student::findOrFail($student_id);
+    public function downloadSoal(Request $request){
+        $token = $request->token;
+        $exam_id = $request->exam_id;
 
-        // Update data lainnya
-        $student->birth_place   = $request->birth_place;
-        $student->birth_date    = $request->birth_date;
-        $student->gender        = $request->gender;
-        $student->address       = $request->address;
-        $student->school_name   = $request->school_name;
+        $token_data = ExamToken::where('token', $token)->where('status', 'Download')->first();
 
-        if ($request->hasFile('profile_image')) {
-            $path = $request->file('profile_image')->storeAs(
-                'public/profile_image', $request->file('profile_image')->getClientOriginalName()
-            );
+        if(empty($token_data)){
+            return redirect()->back()->with('error', 'Token yang Anda masukkan tidak valid')->withInput();
+        } else {
+            $auth = Auth::user();
+            $student = Student::where('user_id', $auth->user_id)->first();
 
-            $path = str_replace('public/', '', $path);
-            $student->profile_image_url = $path;
+            $exam = Exam::where('student_id', $student->student_id)->where('exam_id', $exam_id)->first();
+            $questions = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
+
+            // Redirect to printSoal route with questions data
+            return view('siswa.print-soal', compact('questions'));
         }
+    }
 
-        $student->save();
-
-        return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
-
+    public function printSoal($questions){
+        // Here, $questions will be an array of ExamAnswer objects with nested question and answer relations
+        // You can further process this data or pass it to a view as needed
+        return view('siswa.print-soal', compact('questions'));
     }
 }
