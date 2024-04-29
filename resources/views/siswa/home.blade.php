@@ -6,15 +6,12 @@
 
             <div class="image-container">
 
-                <div class="carousel-item active">
-                    <img src="{{ asset('assets/background.png') }}" class="d-block w-100" alt="Background Image 1">
-                </div>
-                <div class="carousel-item">
-                    <img src="{{ asset('assets/Background2.jpeg') }}" class="d-block w-100 img-opacity" alt="Background Image 2">
-                </div>
-                <div class="carousel-item">
-                    <img src="{{ asset('assets/Background3.jpeg') }}" class="d-block w-100 img-opacity" alt="Background Image 3">
-                </div>
+            <div class="carousel-item active">
+                <img src="{{ asset('assets/background2.jpeg') }}" class="d-block w-100 img-opacity" alt="Background Image 2">
+            </div>
+            <div class="carousel-item">
+                <img src="{{ asset('assets/background3.jpeg') }}" class="d-block w-100 img-opacity" alt="Background Image 3">
+            </div>
             </div>
 
         </div>

@@ -12,7 +12,7 @@
 @endsection
 
 @section('background')
-    <img src="{{ asset('assets/background.png') }}" alt="Background Image" class="bg-dark img-opacity">
+    <img src="{{ asset('assets/background2.jpeg') }}" alt="Background Image" class="bg-dark img-opacity">
 @endsection
 
 @section('content')
