@@ -37,7 +37,7 @@
 
                     <button type="button" class="form-control btn btn-lg rounded-pill px-2 my-2 w-75 shadow no-border" style="background-color: #60D669; color: #ffffff;">
                         <i class="fab fa-whatsapp fa-bounce mr-2"></i>
-                        <a style="color: #ffffff; text-decoration: none;" href="https://api.whatsapp.com/send?phone082295562910&text=Halo%20kak%20,%20Saya%20tertarik%20buat%20join%20bimbelnya%20kak." target="_blank">
+                        <a style="color: #ffffff; text-decoration: none;" href="https://wa.me/6282295562910?text=Halo%20kak%20,%20Saya%20tertarik%20buat%20join%20bimbelnya%20kak" target="_blank">
                             Send Message
                         </a>
                     </button>
@@ -48,16 +48,9 @@
                     </button>
 
 
-<<<<<<< Updated upstream
                     <button type="button" class="form-control btn btn-lg rounded-pill px-2 my-2 w-75 shadow no-border" style="background-color: #0092ff; color: #ffffff;">
                         <i class="fab fa-facebook fa-bounce mr-2"></i>
-                        <a style="color: #ffffff; text-decoration: none;" href="https://www.facebook.com/profile.php?id=61557157866649." target="_blank"> Check Our Facebook</a>
-
-=======
-                    <button type="button" class="form-control btn btn-lg rounded-pill px-4 my-4 w-75" style="background-color: #ffffff; color: #0092ff; border: 2px solid black ;">
-                        <i class="fab fa-facebook-f fa-shake mr-4"></i><a href="https://www.facebook.com/gaktausiapaya."> Check Our Facebook</a>
-                        
->>>>>>> Stashed changes
+                        <a style="color: #ffffff; text-decoration: none;" href="https://www.facebook.com/gaktausiapaya." target="_blank"> Check Our Facebook</a>
                     </button>
 
                 </div>
