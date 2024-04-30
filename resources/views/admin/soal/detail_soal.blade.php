@@ -12,6 +12,11 @@
         <hr style="width: 32%; margin:auto; ">
     </div>
 
+    <div class="col-md-2 ms-auto">
+        <a href="/admin/tambah-data-soal" class="btn btn-secondary d-block mx-auto" role="button">Kembali</a>
+        <br>
+    </div>
+
     @if(session()->has('success'))
         <div class="alert alert-success">
             {{ session()->get('success') }}
