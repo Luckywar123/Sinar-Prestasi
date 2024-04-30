@@ -3,6 +3,12 @@
 @section('content')
 <div class="content w-75">
     <h2 class="text-left mb-lg-5" style="color: #0F3077">Latihan SKD</h2>
+
+    @if(session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
     <div class="d-flex align-items-center flex-column mb-3">
         <div class="p-2">
             <a href="/siswa/simulasi/TKP">
