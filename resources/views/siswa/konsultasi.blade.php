@@ -8,17 +8,24 @@
         .no-border {
             border: none;
         }
+        .bg-image {
+            /* Mengatur gambar latar belakang untuk memenuhi lebar dan tinggi layar */
+            background-size: cover;
+            background-position: center;
+            /* Set tinggi layar sesuai dengan perangkat */
+            height: 100vh;
+        }
     </style>
 @endsection
 
 @section('background')
-    <img src="{{ asset('assets/background2.jpeg') }}" alt="Background Image" class="bg-dark img-opacity">
+    <img src="{{ asset('assets/background2.jpeg') }}" alt="Background Image" class="bg-image bg-dark img-fluid img-opacity">
 @endsection
 
 @section('content')
     <div class="content container py-5">
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-md-8 col-lg-6 col-sm-10">
                 <div class="card rounded-5 mt-3 py-2">
                     <div class="card-body px-5 py-3">
                         <div class="text-center mb-5">
