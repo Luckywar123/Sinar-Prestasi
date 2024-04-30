@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,34 +11,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: "Montserrat", sans-serif;
-        }
-        .full-screen-image {
-            position: relative;
-        }
-        /* Konten di bagian tengah gambar */
-        .content {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: black;
-        }
-    </style>
     @yield('style')
 </head>
+
 <body>
 
     @include('siswa_layouts.navbar')
 
-    <div class="full-screen-image">
-        @yield('background')
+    <div class="container-fluid">
+        <div class="position-relative">
+            @yield('background')
+            <!-- Teks di atas gambar -->
+            <div class="position-absolute top-0 start-50 translate-middle-x text-center text-white">
+                @yield('content')
+            </div>
 
-        <!-- Konten di bagian tengah gambar -->
-        @yield('content')
+        </div>
     </div>
 
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -52,7 +41,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <a class="btn btn-primary" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a class="btn btn-primary" href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         Logout
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -64,8 +54,9 @@
     </div>
 
 
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
