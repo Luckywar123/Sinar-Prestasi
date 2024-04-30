@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-12 mb-3">
                                 @if (!empty($examAnswer->question->question_image_url))
-                                    <img style="width: 469px; height: 200px" src="{{ asset('storage/' . $examAnswer->question->question_image_url) }}" />
+                                    <img class="img-fluid" src="{{ asset('storage/' . $examAnswer->question->question_image_url) }}" alt="Question Image" />
                                 @endif
                             </div>
                             <div class="col-12">
