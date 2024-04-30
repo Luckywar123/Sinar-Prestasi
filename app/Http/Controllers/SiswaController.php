@@ -28,18 +28,19 @@ class SiswaController extends Controller
         return view('siswa.simulasi');
     }
 
-    public function startSimulasi($category){
+    public function startSimulasi($category)
+    {
         $user_id        = auth()->user()->user_id;
         $student        = Student::where('user_id', $user_id)->first();
         $current_time   = now();
         $current_status = 'Ongoing';
         $exam_type      = 'Simulasi';
         $current_exam   = Exam::where('student_id', $student->student_id)
-                            ->where('exam_type', $exam_type)
-                            ->where('exam_status', $current_status)
-                            ->get();
+            ->where('exam_type', $exam_type)
+            ->where('exam_status', $current_status)
+            ->get();
 
-        if($current_exam->isEmpty()){
+        if ($current_exam->isEmpty()) {
             try {
                 $exam = Exam::create([
                     'exam_type'     => "Simulasi",
@@ -48,27 +49,27 @@ class SiswaController extends Controller
                     'exam_status'   => $current_status
                 ]);
 
-                if($category == "TKP"){
+                if ($category == "TKP") {
                     $limit = 45;
-                }else if($category == "TIU"){
+                } else if ($category == "TIU") {
                     $limit = 35;
-                }else if($category == "TWK"){
+                } else if ($category == "TWK") {
                     $limit = 30;
                 }
 
                 $questions = Question::inRandomOrder()
-                                ->where('exam_type', $exam_type)
-                                ->where('category', $category)
-                                ->limit($limit)
-                                ->get();
+                    ->where('exam_type', $exam_type)
+                    ->where('category', $category)
+                    ->limit($limit)
+                    ->get();
 
-                foreach($questions as $question){
-                    try{
+                foreach ($questions as $question) {
+                    try {
                         $exam_answers = ExamAnswer::create([
                             'exam_id'       => $exam->exam_id,
                             'question_id'   => $question->question_id,
                         ]);
-                    } catch(\Exception $e){
+                    } catch (\Exception $e) {
                         return redirect('siswa/simulasi')->with('error', 'Terjadi kesalahan saat menyimpan data soal pada exam.');
                     }
                 }
@@ -87,11 +88,25 @@ class SiswaController extends Controller
                 $remainingTime = $examEnd->diffInSeconds($currentTime);
 
                 return view('siswa.latihan', compact('questions', 'remainingTime'));
-
             } catch (\Exception $e) {
                 return redirect('siswa/simulasi')->with('error', 'Terjadi kesalahan saat menyimpan data exam.');
             }
-        }else{
+        } else {
+            if ($current_exam->count() > 0) {
+                $exam_data   = Exam::where('student_id', $student->student_id)
+                    ->where('exam_type', $exam_type)
+                    ->where('exam_status', $current_status)
+                    ->first();
+
+                $exam               = Exam::findOrFail($exam_data->exam_id);
+                $exam_answer        = ExamAnswer::with('answer')->where('exam_id', $exam->exam_id)->first();
+                $ongoing_category   = $exam_answer->question->category;
+
+                if ($ongoing_category != $category) {
+                    return redirect('siswa/simulasi')->with('error', 'Latihan SKD dengan kategori ' . $ongoing_category . ' sedang berlangsung. Silahkan selesaikan latihan yang sedan berjalan terlebih dahulu.');
+                }
+            }
+
             $exam       = Exam::where('student_id', $student->student_id)->where('exam_status', $current_status)->first();
             $questions  = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
 
@@ -110,7 +125,8 @@ class SiswaController extends Controller
         }
     }
 
-    public function simpanJawabanSimulasi($exam_answer_id, Request $request){
+    public function simpanJawabanSimulasi($exam_answer_id, Request $request)
+    {
 
         try {
             $exam_answer = ExamAnswer::with('question.answer')->where('exam_answer_id', $exam_answer_id)->first();
@@ -133,7 +149,7 @@ class SiswaController extends Controller
             if ($answer->answer_score == $lowestScore) {
                 // Jika skor jawaban tertentu sama dengan skor terendah, maka jawaban tersebut memiliki skor terendah
                 $is_false = 1;
-            }else {
+            } else {
                 // Jika tidak, maka jawaban tersebut tidak memiliki skor terendah
                 $is_false = 0;
             }
@@ -158,7 +174,8 @@ class SiswaController extends Controller
         }
     }
 
-    public function selesaiSimulasi(Request $request){
+    public function selesaiSimulasi(Request $request)
+    {
         $user_id        = auth()->user()->user_id;
         $student        = Student::where('user_id', $user_id)->first();
         $current_time   = now();
@@ -171,7 +188,7 @@ class SiswaController extends Controller
         $exam_answers   = ExamAnswer::with('answer')->where('exam_id', $exam->exam_id)->get();
 
         foreach ($exam_answers as $exam_answer) {
-            if($exam_answer->answer_id == NULL){
+            if ($exam_answer->answer_id == NULL) {
 
                 $exam_answer_data = ExamAnswer::findOrFail($exam_answer->exam_answer_id);
                 $exam_answer_data->is_false = 1;
@@ -190,7 +207,8 @@ class SiswaController extends Controller
         return redirect('/siswa/after-test/' . $exam->exam_id);
     }
 
-    public function afterTest($exam_id){
+    public function afterTest($exam_id)
+    {
         $exam           = Exam::findOrFail($exam_id);
         $exam_answer    = ExamAnswer::with('answer')->where('exam_id', $exam->exam_id)->first();
         $category = $exam_answer->question->category;
@@ -214,18 +232,18 @@ class SiswaController extends Controller
             $is_false_count = $exam_answers->where('is_false', true)->count();
 
             $question_category_data = ExamAnswer::with(['answer'])
-            ->where('exam_id', $exam_id)
-            ->first();
+                ->where('exam_id', $exam_id)
+                ->first();
 
             $category_data = $question_category_data->question->category;
 
-            if($category_data == "TKP"){
+            if ($category_data == "TKP") {
                 $category = "Tes Karakteristik Pribadi (TKP)";
                 $limit = 45;
-            }else if($category_data == "TIU"){
+            } else if ($category_data == "TIU") {
                 $category = "Tes Intelegensi Umum (TIU)";
                 $limit = 35;
-            }else if($category_data == "TWK"){
+            } else if ($category_data == "TWK") {
                 $category = "Tes Wawasan Kebangsaan (TWK)";
                 $limit = 30;
             }
@@ -245,7 +263,6 @@ class SiswaController extends Controller
                 'Nilai' => $exam_scores,
                 'Type' => $category_data
             ];
-
         } else if ($exam->exam_type == "Test") {
             $exam_answers = ExamAnswer::with(['answer', 'question'])
                 ->where('exam_id', $exam_id)
@@ -283,7 +300,6 @@ class SiswaController extends Controller
             // Mengirimkan data
             $data = $categories;
             $data["Type"] = "Test";
-
         }
 
         // Kirim data ke view
@@ -328,14 +344,15 @@ class SiswaController extends Controller
         return view('siswa.hasil', compact('questions', 'minScores', 'maxScores'));
     }
 
-    public function startTest(Request $request){
+    public function startTest(Request $request)
+    {
         $token          = $request->token;
         $token_data     = ExamToken::where('token', $token)->WHERE('status', 'Simulasi')->first();
 
 
-        if(empty($token_data)){
+        if (empty($token_data)) {
             return redirect()->back()->with('error', 'Token yang Anda masukkan tidak valid')->withInput();
-        }else {
+        } else {
             $user_id        = auth()->user()->user_id;
             $student        = Student::where('user_id', $user_id)->first();
             $current_time   = now();
@@ -345,9 +362,9 @@ class SiswaController extends Controller
             $questions = collect(); // Inisialisasi koleksi untuk menyimpan semua pertanyaan
 
             $exam_status    = Exam::where('student_id', $student->student_id)
-                                ->where('exam_type', 'Test')
-                                ->where('token', $token)
-                                ->get();
+                ->where('exam_type', 'Test')
+                ->where('token', $token)
+                ->get();
 
             // dd($exam_status);
 
@@ -356,11 +373,11 @@ class SiswaController extends Controller
             }
 
             $current_exam   = Exam::where('student_id', $student->student_id)
-                                ->where('exam_type', 'Test')
-                                ->where('exam_status', $current_status)
-                                ->get();
+                ->where('exam_type', 'Test')
+                ->where('exam_status', $current_status)
+                ->get();
 
-            if($current_exam->isEmpty()){
+            if ($current_exam->isEmpty()) {
                 try {
                     $exam = Exam::create([
                         'exam_type'     => $exam_type,
@@ -372,31 +389,31 @@ class SiswaController extends Controller
 
                     foreach ($categories as $category) {
 
-                        if($category == "TKP"){
+                        if ($category == "TKP") {
                             $limit = 45;
-                        }else if($category == "TIU"){
+                        } else if ($category == "TIU") {
                             $limit = 35;
-                        }else if($category == "TWK"){
+                        } else if ($category == "TWK") {
                             $limit = 30;
                         }
                         // Mengambil 35 pertanyaan untuk setiap kategori
                         $questionsPerCategory = Question::inRandomOrder()
-                                                        ->where('exam_type', $exam_type)
-                                                        ->where('category', $category)
-                                                        ->limit($limit)
-                                                        ->get();
+                            ->where('exam_type', $exam_type)
+                            ->where('category', $category)
+                            ->limit($limit)
+                            ->get();
 
                         // Menggabungkan pertanyaan dari setiap kategori ke dalam koleksi utama
                         $questions = $questions->merge($questionsPerCategory);
                     }
 
-                    foreach($questions as $question){
-                        try{
+                    foreach ($questions as $question) {
+                        try {
                             $exam_answers = ExamAnswer::create([
                                 'exam_id'       => $exam->exam_id,
                                 'question_id'   => $question->question_id,
                             ]);
-                        } catch(\Exception $e){
+                        } catch (\Exception $e) {
                             return redirect('siswa/simulasi')->with('error', 'Terjadi kesalahan saat menyimpan data soal pada exam.');
                         }
                     }
@@ -415,11 +432,19 @@ class SiswaController extends Controller
                     $remainingTime = $examEnd->diffInSeconds($currentTime);
 
                     return view('siswa.latihan', compact('questions', 'remainingTime'));
-
                 } catch (\Exception $e) {
                     return redirect('siswa/simulasi')->with('error', 'Terjadi kesalahan saat menyimpan data exam.');
                 }
-            }else{
+            } else {
+
+                $current_simulation   = Exam::where('student_id', $student->student_id)
+                    ->where('exam_type', 'Simulasi')
+                    ->where('exam_status', $current_status)
+                    ->get();
+
+                if ($current_exam->isNotEmpty()) {
+                    return redirect('siswa/simulasi')->with('error', 'Latihan SKD sedang berlangsung. Silahkan selesaikan latihan yang sedan berjalan terlebih dahulu.');
+                }
                 $exam       = Exam::where('student_id', $student->student_id)->where('exam_status', $current_status)->first();
                 $questions  = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
 
@@ -438,12 +463,14 @@ class SiswaController extends Controller
         }
     }
 
-    public function ubahProfil($user_id){
+    public function ubahProfil($user_id)
+    {
         $student_data = User::with('student')->findOrFail($user_id);
         return view('siswa.ubah_profil', ["student_data" => $student_data]);
     }
 
-    public function updateProfil($student_id, Request $request){
+    public function updateProfil($student_id, Request $request)
+    {
         try {
             $auth = Auth::user();
 
@@ -473,7 +500,8 @@ class SiswaController extends Controller
 
                 if ($request->hasFile('profile_image')) {
                     $path = $request->file('profile_image')->storeAs(
-                        'public/profile_image', $request->file('profile_image')->getClientOriginalName()
+                        'public/profile_image',
+                        $request->file('profile_image')->getClientOriginalName()
                     );
 
                     $path = str_replace('public/', '', $path);
@@ -484,17 +512,18 @@ class SiswaController extends Controller
 
                 $request->session()->flash('success', 'Profil berhasil diperbarui.');
                 return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
-            }catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $request->session()->flash('error', 'Terjadi kesalahan saat memperbaharaui data siswa.');
                 return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
             }
         } catch (\Exception $e) {
             $request->session()->flash('error', 'Terjadi kesalahan saat memperbaharaui akun siswa.');
-                return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
+            return redirect()->route('ubahProfil', ['user_id' => $user->user_id]);
         }
     }
 
-    public function riwayatTest(){
+    public function riwayatTest()
+    {
         $auth       = Auth::user();
         $user_id    = $auth->user_id;
         $student    = Student::WHERE('user_id', $user_id)->first();
@@ -502,13 +531,14 @@ class SiswaController extends Controller
         return view('siswa.riwayat', ['exams' => $exams]);
     }
 
-    public function downloadSoal(Request $request){
+    public function downloadSoal(Request $request)
+    {
         $token = $request->token;
         $exam_id = $request->exam_id;
 
         $token_data = ExamToken::where('token', $token)->where('status', 'Download')->first();
 
-        if(empty($token_data)){
+        if (empty($token_data)) {
             return redirect()->back()->with('error', 'Token yang Anda masukkan tidak valid')->withInput();
         } else {
             $auth = Auth::user();
@@ -522,7 +552,8 @@ class SiswaController extends Controller
         }
     }
 
-    public function printSoal($questions){
+    public function printSoal($questions)
+    {
         // Here, $questions will be an array of ExamAnswer objects with nested question and answer relations
         // You can further process this data or pass it to a view as needed
         return view('siswa.print-soal', compact('questions'));
