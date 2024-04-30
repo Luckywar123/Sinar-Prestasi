@@ -33,7 +33,7 @@
                                     </b>
                                 </p>
                             </div>
-                            <div class="col-12 mb-3">
+                            <div class="col-md-3 col-sm12 mb-3">
                                 @if (!empty($examAnswer->question->question_image_url))
                                     <img class="img-fluid" src="{{ asset('storage/' . $examAnswer->question->question_image_url) }}" alt="Question Image" />
                                 @endif
