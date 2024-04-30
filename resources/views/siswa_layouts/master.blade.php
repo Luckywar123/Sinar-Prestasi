@@ -43,8 +43,8 @@
 
     @include('siswa_layouts.navbar')
 
-    <div class="full-screen-image">
-        @yield('background')
+    <div>
+        {{-- @yield('background') --}}
 
         <!-- Konten di bagian tengah gambar -->
         @yield('content')
