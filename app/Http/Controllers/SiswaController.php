@@ -349,8 +349,10 @@ class SiswaController extends Controller
                                 ->where('token', $token)
                                 ->get();
 
-            if(!empty($exam_status)){
-                return redirect()->back()->with('error', 'Token yang Anda masukkan telah digunakan sebelumnya.')->withInput();
+            // dd($exam_status);
+
+            if ($exam_status->isNotEmpty()) {
+                return redirect()->back()->with('error', 'Token yang Anda masukkan belum digunakan sebelumnya.')->withInput();
             }
 
             $current_exam   = Exam::where('student_id', $student->student_id)
