@@ -14,18 +14,8 @@
         body {
             font-family: "Montserrat", sans-serif;
         }
-        body, img {
-            margin: 0;
-            padding: 0;
-        }
         .full-screen-image {
-            height: calc(100vh - 56px); /* 56px adalah tinggi navbar */
-            position: relative; /* Menjadikan posisi absolut konten di dalamnya */
-        }
-        .full-screen-image img {
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
+            position: relative;
         }
         /* Konten di bagian tengah gambar */
         .content {
@@ -43,8 +33,8 @@
 
     @include('siswa_layouts.navbar')
 
-    <div>
-        {{-- @yield('background') --}}
+    <div class="full-screen-image">
+        @yield('background')
 
         <!-- Konten di bagian tengah gambar -->
         @yield('content')
