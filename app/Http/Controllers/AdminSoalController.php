@@ -87,46 +87,51 @@ class AdminSoalController extends Controller
         $user = auth()->user()->user_id;
 
         try {
-            $question = Question::create([
-                'category'      => $request->category,
-                'sub_category'  => $request->sub_category,
-                'exam_type'     => $request->exam_type,
-                'user_id'       => $user
-            ]);
+            // Membuat instansi objek pertanyaan tanpa menyimpannya ke database
+            $question = new Question();
+            $question->category = $request->category;
+            $question->sub_category = $request->sub_category;
+            $question->exam_type = $request->exam_type;
 
-            $question_id = $question->question_id;
-            // $question_id = 1;
-            return redirect()->route('tambahDetailSoal', ['question_id' => $question_id]);
+            // Simpan objek pertanyaan ke dalam session
+            $request->session()->put('question', $question);
+
+            return redirect()->route('tambahDetailSoal');
         } catch (\Exception $e) {
-            return redirect('admin/tambah-data-soal')->with('error', 'Terjadi kesalahan saat menyimpan data soal.');
+            return redirect('admin/tambah-data-soal')->with('error', 'Terjadi kesalahan saat menyimpan data kategori dan subkategori.');
         }
     }
 
-    public function tambahDetailSoal($question_id)
+    public function tambahDetailSoal(Request $request)
     {
-        $question       = Question::findOrFail($question_id);
-        $question_id    = $question->question_id;
-        return view('admin.soal.detail_soal', ["question_id" => $question_id]);
+        return view('admin.soal.detail_soal');
     }
 
-    public function simpanDetailSoal($question_id, Request $request)
+    public function simpanDetailSoal(Request $request)
     {
         try {
             // Validasi input menggunakan Validator
             $question_validation = Validator::make($request->all(), [
-                'question_text' => 'required|string|max:555',
+                'question_text' => 'required|string|max:3000',
             ]);
 
             // Cek jika validasi gagal
             if ($question_validation->fails()) {
-                Question::destroy($question_id);
-                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan soal. Soal yang Anda masukkan melebihi 555 karakter.');
+                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan soal. Soal yang Anda masukkan melebihi 3000 karakter.');
             }
 
-            $question = Question::findOrFail($question_id);
+            $question_session = $request->session()->get('question');
+            $user_id = auth()->user()->user_id;
+            // $question = Question::findOrFail($question_id);
 
             // Update data lainnya
-            $question->question_text = $request->question_text;
+            $question = Question::create([
+                'category'      => $question_session->category,
+                'sub_category'  => $question_session->sub_category,
+                'exam_type'     => $question_session->exam_type,
+                'user_id'       => $user_id,
+                'question_text' => $request->question_text
+            ]);
 
             if ($request->hasFile('gambar')) {
                 $path = $request->file('gambar')->storeAs(
@@ -139,6 +144,8 @@ class AdminSoalController extends Controller
 
             $question->save();
 
+            $question_id = $question->question_id;
+
             try{
 
                 if($request->selectedOption == "text"){
@@ -146,9 +153,6 @@ class AdminSoalController extends Controller
                 }else if($request->selectedOption == "image"){
                     $jawabanKeys = preg_grep('/^imageJawaban\d+$/', array_keys($request->all()));
                 }
-
-                // dd($jawabanKeys);
-                // $scoresKeys = preg_grep('/^score\d+$/', array_keys($request->all()));
 
                 if (!empty($jawabanKeys)) {
                     foreach ($jawabanKeys as $key) {
@@ -158,14 +162,14 @@ class AdminSoalController extends Controller
 
                             // Validasi input menggunakan Validator
                             $answer_validation = Validator::make(['textJawaban' => $textJawaban], [
-                                'textJawaban' => 'required|string|max:555',
+                                'textJawaban' => 'required|string|max:3000',
                             ]);
 
                             // Cek jika validasi gagal
                             if ($answer_validation->fails()) {
                                 Question::destroy($question_id);
                                 Answer::destroy($question_id);
-                                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan jawaban. Jawaban yang Anda masukkan melebihi 555 karakter.');
+                                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan jawaban. Jawaban yang Anda masukkan melebihi 3000 karakter.');
                             }
 
                         }else if($request->selectedOption == "image"){
@@ -196,14 +200,14 @@ class AdminSoalController extends Controller
                             ]);
                         }
                     }
-                    return redirect('admin/tambah-data-soal')->with('success', 'Data soal, detail soal, dan jawaban berhasil disimpan.');
+                    return redirect('admin/tambah-detail-soal')->with('success', 'Data soal, detail soal, dan jawaban berhasil disimpan.');
                 }
             } catch (\Exception $e) {
-                return redirect('admin/tambah-data-soal')->with('error', 'Terjadi kesalahan saat menyimpan jawaban soal.');
+                return redirect('admin/tambah-detail-soal')->with('error', 'Terjadi kesalahan saat menyimpan jawaban soal.');
 
             }
         } catch (\Exception $e) {
-            return redirect('admin/tambah-data-soal')->with('error', 'Terjadi kesalahan saat menyimpan detail soal.');
+            return redirect('admin/tambah-detail-soal')->with('error', 'Terjadi kesalahan saat menyimpan data soal.');
         }
     }
 }

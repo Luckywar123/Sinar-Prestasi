@@ -12,10 +12,20 @@
         <hr style="width: 32%; margin:auto; ">
     </div>
 
+    @if(session()->has('success'))
+        <div class="alert alert-success">
+            {{ session()->get('success') }}
+        </div>
+    @endif
+    @if(session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
+
     <div class="col-12">
-        <form action="/admin/simpan-detail-soal/{{ $question_id }}" method="POST" id="formDetailSoal" enctype="multipart/form-data">
+        <form action="/admin/simpan-detail-soal/" method="POST" id="formDetailSoal" enctype="multipart/form-data">
             @csrf
-            @method('PATCH')
             <div class="card rounded-5 mt-3 py-2" style="border-radius: 1rem">
                 <div class="card-body px-5 py-4">
                     <div class="form-group row mb-4">
@@ -31,7 +41,7 @@
                     <div class="form-group row mb-4">
                         <div class="col-md-2 ms-auto">
                             <button type="button" class="btn btn-primary form-control" style="background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA" id="inputGambarBtn">Input Gambar</button>
-                            <input type="file" id="gambarInput" name="gambar" style="display: none;">
+                            <input type="file" id="gambarInput" name="gambar" style="display: none;" accept="image/*">
                         </div>
                     </div>
                 </div>

@@ -31,7 +31,7 @@
                     <div class="form-group row mb-4">
                         <label for="category" class="col-sm-2 col-form-label text-right">{{ __('Jenis Soal') }} <span style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="category" id="category">
+                            <select class="form-control" name="category" id="category" required>
                                 <option value="" selected disabled hidden>Pilih Jenis Soal</option>
                                 <option value="TKP">Tes Karakteristik Pribadi (TKP)</option>
                                 <option value="TWK">Tes Wawancara Kebangsaan (TWK)</option>
@@ -42,7 +42,7 @@
                     <div class="form-group row mb-4">
                         <label for="sub_category" class="col-sm-2 col-form-label text-right">{{ __('Sub Soal') }} <span style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="sub_category" id="sub_category">
+                            <select class="form-control" name="sub_category" id="sub_category" required>
                                 <option value="" selected disabled hidden>Pilih Sub Soal</option>
                             </select>
                         </div>
@@ -51,11 +51,11 @@
                         <label for="simulasi" class="col-sm-2 col-form-label text-right">{{ __('Tipe Ujian') }} <span style="color: red">*</span></label>
                         <div class="col-sm-10">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="exam_type" id="simulasi" value="Simulasi">
+                                <input class="form-check-input" type="radio" name="exam_type" id="simulasi" value="Simulasi" required>
                                 <label for="simulasi" class="form-check-label" for="simulasi">Simulasi</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="exam_type" id="test" value="Test">
+                                <input class="form-check-input" type="radio" name="exam_type" id="test" value="Test" required>
                                 <label for="test" class="form-check-label" for="test">Test</label>
                             </div>
                         </div>
