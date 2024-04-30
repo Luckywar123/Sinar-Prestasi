@@ -29,7 +29,7 @@
     @endif
 
     <div class="col-12">
-        <form action="/admin/simpan-detail-soal/" method="POST" id="formDetailSoal" enctype="multipart/form-data">
+        <form action="{{ route('simpanDetailSoal') }}" method="POST" id="formDetailSoal" enctype="multipart/form-data">
             @csrf
             <div class="card rounded-5 mt-3 py-2" style="border-radius: 1rem">
                 <div class="card-body px-5 py-4">
