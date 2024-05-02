@@ -35,6 +35,16 @@ class SiswaController extends Controller
         $current_time   = now();
         $current_status = 'Ongoing';
         $exam_type      = 'Simulasi';
+
+        $current_simulation   = Exam::where('student_id', $student->student_id)
+            ->where('exam_type', 'Test')
+            ->where('exam_status', $current_status)
+            ->get();
+
+        if ($current_simulation->isNotEmpty()) {
+            return redirect('siswa/simulasi')->with('error', 'Simulasi CAT sedang berlangsung. Silahkan selesaikan test yang sedan berjalan terlebih dahulu.');
+        }
+
         $current_exam   = Exam::where('student_id', $student->student_id)
             ->where('exam_type', $exam_type)
             ->where('exam_status', $current_status)
@@ -103,7 +113,7 @@ class SiswaController extends Controller
                 $ongoing_category   = $exam_answer->question->category;
 
                 if ($ongoing_category != $category) {
-                    return redirect('siswa/simulasi')->with('error', 'Latihan SKD dengan kategori ' . $ongoing_category . ' sedang berlangsung. Silahkan selesaikan latihan yang sedan berjalan terlebih dahulu.');
+                    return redirect('siswa/simulasi')->with('error', 'Latihan SKD dengan kategori ' . $ongoing_category . ' sedang berlangsung. Silahkan selesaikan test yang sedan berjalan terlebih dahulu.');
                 }
             }
 
@@ -363,13 +373,21 @@ class SiswaController extends Controller
 
             $exam_status    = Exam::where('student_id', $student->student_id)
                 ->where('exam_type', 'Test')
+                ->where('exam_status', 'Finish')
                 ->where('token', $token)
                 ->get();
 
-            // dd($exam_status);
-
             if ($exam_status->isNotEmpty()) {
                 return redirect()->back()->with('error', 'Token yang Anda masukkan belum digunakan sebelumnya.')->withInput();
+            }
+
+            $current_simulation   = Exam::where('student_id', $student->student_id)
+                ->where('exam_type', 'Simulasi')
+                ->where('exam_status', $current_status)
+                ->get();
+
+            if ($current_simulation->isNotEmpty()) {
+                return redirect('siswa/simulasi')->with('error', 'Latihan SKD sedang berlangsung. Silahkan selesaikan latihan yang sedan berjalan terlebih dahulu.');
             }
 
             $current_exam   = Exam::where('student_id', $student->student_id)
@@ -436,15 +454,6 @@ class SiswaController extends Controller
                     return redirect('siswa/simulasi')->with('error', 'Terjadi kesalahan saat menyimpan data exam.');
                 }
             } else {
-
-                $current_simulation   = Exam::where('student_id', $student->student_id)
-                    ->where('exam_type', 'Simulasi')
-                    ->where('exam_status', $current_status)
-                    ->get();
-
-                if ($current_exam->isNotEmpty()) {
-                    return redirect('siswa/simulasi')->with('error', 'Latihan SKD sedang berlangsung. Silahkan selesaikan latihan yang sedan berjalan terlebih dahulu.');
-                }
                 $exam       = Exam::where('student_id', $student->student_id)->where('exam_status', $current_status)->first();
                 $questions  = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
 
