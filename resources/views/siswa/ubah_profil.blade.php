@@ -185,7 +185,7 @@
     });
 
     // Munculkan dialog browse saat ikon pensil diklik
-    editIcon.addEventListener('click', () => {
+    profileImage.addEventListener('click', () => {
       uploadProfileImage.click(); // Klik pada input file tersembunyi
     });
 
