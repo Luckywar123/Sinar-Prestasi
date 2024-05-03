@@ -86,11 +86,10 @@ class SiswaController extends Controller
 
                 $questions  = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
 
-                // Tambahkan kode untuk timer di sini
                 // Ambil waktu mulai ujian dari tabel exam
                 $examStart = $exam->exam_start;
 
-                // Tambahkan 70 menit ke waktu mulai ujian
+                // Tambahkan 100 menit ke waktu mulai ujian
                 $examEnd = Carbon::parse($examStart)->addMinutes(100);
 
                 // Hitung sisa waktu yang tersisa
@@ -120,18 +119,40 @@ class SiswaController extends Controller
             $exam       = Exam::where('student_id', $student->student_id)->where('exam_status', $current_status)->first();
             $questions  = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
 
-            // Tambahkan kode untuk timer di sini
             // Ambil waktu mulai ujian dari tabel exam
             $examStart = $exam->exam_start;
 
-            // Tambahkan 70 menit ke waktu mulai ujian
+            // Tambahkan 100 menit ke waktu mulai ujian
             $examEnd = Carbon::parse($examStart)->addMinutes(100);
 
             // Hitung sisa waktu yang tersisa
             $currentTime = Carbon::now();
-            $remainingTime = $examEnd->diffInSeconds($currentTime);
 
-            return view('siswa.latihan', compact('questions', 'remainingTime'));
+            if ($currentTime > $examEnd) {
+                $exam_scores    = 0;
+                foreach ($questions as $exam_answer) {
+                    if ($exam_answer->answer_id == NULL) {
+                        $exam_answer_data = ExamAnswer::findOrFail($exam_answer->exam_answer_id);
+                        $exam_answer_data->is_false = 1;
+                        $exam_answer_data->save();
+                        continue;
+                    }
+                    $exam_scores += $exam_answer->answer->answer_score;
+                }
+
+                $exam->exam_score   = $exam_scores;
+                $exam->exam_finish  = $examEnd;
+                $exam->exam_status  = 'Finish';
+                $exam->save();
+
+                return redirect('/siswa/after-test/' . $exam->exam_id);
+                // return redirect()->back()->with('error', 'Waktu test Anda sebelumnya telah berakhir.')->withInput();
+            } else if ($currentTime < $examEnd) {
+                $remainingTime = $examEnd->diffInSeconds($currentTime);
+                return view('siswa.latihan', compact('questions', 'remainingTime'));
+            } else {
+                return redirect('siswa/simulasi')->with('error', 'Status waktu test tidak dapat ditentukan.');
+            }
         }
     }
 
@@ -378,7 +399,7 @@ class SiswaController extends Controller
                 ->get();
 
             if ($exam_status->isNotEmpty()) {
-                return redirect()->back()->with('error', 'Token yang Anda masukkan belum digunakan sebelumnya.')->withInput();
+                return redirect()->back()->with('error', 'Token yang Anda masukkan telah digunakan sebelumnya.')->withInput();
             }
 
             $current_simulation   = Exam::where('student_id', $student->student_id)
@@ -438,11 +459,10 @@ class SiswaController extends Controller
 
                     $questions  = ExamAnswer::with('question.answer')->where('exam_id', $exam->exam_id)->get();
 
-                    // Tambahkan kode untuk timer di sini
                     // Ambil waktu mulai ujian dari tabel exam
                     $examStart = $exam->exam_start;
 
-                    // Tambahkan 70 menit ke waktu mulai ujian
+                    // Tambahkan 100 menit ke waktu mulai ujian
                     $examEnd = Carbon::parse($examStart)->addMinutes(100);
 
                     // Hitung sisa waktu yang tersisa
@@ -460,14 +480,37 @@ class SiswaController extends Controller
                 // Ambil waktu mulai ujian dari tabel exam
                 $examStart = $exam->exam_start;
 
-                // Tambahkan 70 menit ke waktu mulai ujian
+                // Tambahkan 100 menit ke waktu mulai ujian
                 $examEnd = Carbon::parse($examStart)->addMinutes(100);
 
                 // Hitung sisa waktu yang tersisa
                 $currentTime = Carbon::now();
-                $remainingTime = $examEnd->diffInSeconds($currentTime);
 
-                return view('siswa.latihan', compact('questions', 'remainingTime'));
+                if ($currentTime > $examEnd) {
+                    $exam_scores    = 0;
+                    foreach ($questions as $exam_answer) {
+                        if ($exam_answer->answer_id == NULL) {
+                            $exam_answer_data = ExamAnswer::findOrFail($exam_answer->exam_answer_id);
+                            $exam_answer_data->is_false = 1;
+                            $exam_answer_data->save();
+                            continue;
+                        }
+                        $exam_scores += $exam_answer->answer->answer_score;
+                    }
+
+                    $exam->exam_score   = $exam_scores;
+                    $exam->exam_finish  = $examEnd;
+                    $exam->exam_status  = 'Finish';
+                    $exam->save();
+
+                    return redirect('/siswa/after-test/' . $exam->exam_id);
+                    // return redirect()->back()->with('error', 'Waktu test Anda sebelumnya telah berakhir.')->withInput();
+                } else if ($currentTime < $examEnd) {
+                    $remainingTime = $examEnd->diffInSeconds($currentTime);
+                    return view('siswa.latihan', compact('questions', 'remainingTime'));
+                } else {
+                    return redirect()->back()->with('error', 'Status waktu test tidak dapat ditentukan.')->withInput();
+                }
             }
         }
     }
