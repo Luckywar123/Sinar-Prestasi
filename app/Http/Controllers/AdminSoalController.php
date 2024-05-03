@@ -112,12 +112,12 @@ class AdminSoalController extends Controller
         try {
             // Validasi input menggunakan Validator
             $question_validation = Validator::make($request->all(), [
-                'question_text' => 'required|string|max:3000',
+                'question_text' => 'required|string|max:7500',
             ]);
 
             // Cek jika validasi gagal
             if ($question_validation->fails()) {
-                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan soal. Soal yang Anda masukkan melebihi 3000 karakter.');
+                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan soal. Soal yang Anda masukkan melebihi 7500 karakter.');
             }
 
             $question_session = $request->session()->get('question');
@@ -162,14 +162,14 @@ class AdminSoalController extends Controller
 
                             // Validasi input menggunakan Validator
                             $answer_validation = Validator::make(['textJawaban' => $textJawaban], [
-                                'textJawaban' => 'required|string|max:3000',
+                                'textJawaban' => 'required|string|max:7500',
                             ]);
 
                             // Cek jika validasi gagal
                             if ($answer_validation->fails()) {
                                 Question::destroy($question_id);
                                 Answer::destroy($question_id);
-                                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan jawaban. Jawaban yang Anda masukkan melebihi 3000 karakter.');
+                                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan jawaban. Jawaban yang Anda masukkan melebihi 7500 karakter.');
                             }
 
                         }else if($request->selectedOption == "image"){
