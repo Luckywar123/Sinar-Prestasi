@@ -40,7 +40,7 @@
                     </div>
                     <div class="form-group row mb-4">
                         <div class="col-sm-12">
-                            <textarea class="form-control" style="border: none; resize: none; outline: none;" rows="5" placeholder="Ketik di sini.." id="textarea" name="question_text" required></textarea>
+                            <textarea class="form-control" style="border: none; resize: none; outline: none;" rows="5" placeholder="Ketik di sini.." id="textarea" name="question_text"></textarea>
                         </div>
                     </div>
                     <div class="form-group row mb-4">
@@ -199,7 +199,29 @@
                 document.getElementById('selectedOption').value = this.value; // Set nilai input hidden sesuai dengan radio button yang dipilih
             });
         });
+
+        // Tangkap event form submit
+        document.getElementById('formDetailSoal').addEventListener('submit', function() {
+        // Perbarui nilai textarea dengan konten dari editor TinyMCE
+        var content = tinymce.get('textarea').getContent();
+        document.getElementById('textarea').value = content;
+    });
     </script>
 
+    <script src="{{ asset('js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            license_key: 'gpl',
+            plugins: 'autolink lists link image charmap preview anchor pagebreak',
+            toolbar: 'undo redo copy paste| styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link',
+            menubar: false,
+            autosave_ask_before_unload: false,
+            height: 300,
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+            hidden_input: false
+        });
+    </script>
 
 @endpush
