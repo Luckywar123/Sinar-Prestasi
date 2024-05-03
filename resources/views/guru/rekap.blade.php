@@ -41,7 +41,8 @@
         <table class="table table-bordered">
             <thead class="text-center" style="background-color: #2F6BB3; color: #DFF8FD">
                 <th style="width: 5%">No</th>
-                <th style="width: 35%"">Nama</th>
+                <th style="width: 10%">Tanggal Ujian</th>
+                <th style="width: 25%"">Nama</th>
                 <th style="width: 10%">Test</th>
                 <th style="width: 50%">Nilai</th>
             </thead>
@@ -50,10 +51,11 @@
                     @foreach ($exams as $key => $exam)
                         <tr>
                             <td class="align-middle text-center">{{ $key + 1 }}</td>
+                            <td class="align-middle text-center">{{ \Carbon\Carbon::parse($exam->exam_start)->format('d M Y') }}</td>
                             <td class="align-middle">{{ $exam->student->user->full_name }}</td>
                             @if ($exam->exam_type == "Simulasi")
                                 @foreach ($exam->exam_answer as $k => $answer)
-                                    @if ($k == 34)
+                                    @if ($k == 0)
                                         <td class="align-middle text-center">{{ $answer->question->category }}</td>
                                     @endif
                                 @endforeach
