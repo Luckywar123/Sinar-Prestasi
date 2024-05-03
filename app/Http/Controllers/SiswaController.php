@@ -579,7 +579,7 @@ class SiswaController extends Controller
         $auth       = Auth::user();
         $user_id    = $auth->user_id;
         $student    = Student::WHERE('user_id', $user_id)->first();
-        $exams      = Exam::WHERE('student_id', $student->student_id)->ORDERBY('created_at', 'DESC')->get();
+        $exams      = Exam::WHERE('student_id', $student->student_id)->ORDERBY('created_at', 'DESC')->LIMIT(10)->get();
         return view('siswa.riwayat', ['exams' => $exams]);
     }
 
