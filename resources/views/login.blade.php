@@ -6,6 +6,7 @@
             opacity: 1;
             /* Atur nilai opacity sesuai keinginan Anda, 0.0 hingga 1.0 */
         }
+
         .bg-image {
             /* Mengatur gambar latar belakang untuk memenuhi lebar dan tinggi layar */
             background-size: cover;
@@ -28,20 +29,28 @@
                     <div class="card-body px-5 py-3">
                         <h3 class="card-title font-weight-bold my-5" style="color: #0F3077">Selamat Datang</h3>
 
+                        @if (session()->has('error'))
+                            <div class="alert alert-danger">
+                                {{ session()->get('error') }}
+                            </div>
+                        @endif
+
                         <form id="formAuthentication" action="{{ route('authenticate') }}" method="POST">
                             @csrf
                             <div class="form-group row mb-4"> <!-- Tambahkan class row di sini -->
-                                <label for="username" class="col-md-5 col-form-label text-right text-dark">ID Pengguna</label> <!-- Ubah class col-3 menjadi col-md-5 -->
+                                <label for="username" class="col-md-5 col-form-label text-right text-dark">ID
+                                    Pengguna</label> <!-- Ubah class col-3 menjadi col-md-5 -->
                                 <div class="col-md-7"> <!-- Ubah class col-4 menjadi col-md-7 -->
-                                    <input type="text" class="form-control" id="username"
-                                        name="username" placeholder="Username">
+                                    <input type="text" class="form-control" id="username" name="username"
+                                        placeholder="Username">
                                 </div>
                             </div>
                             <div class="form-group row mb-4"> <!-- Tambahkan class row di sini -->
-                                <label for="password" class="col-md-5 col-form-label text-right text-dark">Password</label> <!-- Ubah class col-3 menjadi col-md-5 -->
+                                <label for="password" class="col-md-5 col-form-label text-right text-dark">Password</label>
+                                <!-- Ubah class col-3 menjadi col-md-5 -->
                                 <div class="col-md-7"> <!-- Ubah class col-4 menjadi col-md-7 -->
-                                    <input type="password" class="form-control" id="password"
-                                        name="password" placeholder="Password">
+                                    <input type="password" class="form-control" id="password" name="password"
+                                        placeholder="Password">
                                 </div>
                             </div>
                             <div class="form-group mt-2">
