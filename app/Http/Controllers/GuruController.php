@@ -170,41 +170,27 @@ class GuruController extends Controller
         $twkLulus       = 0;
         $twkTidakLulus  = 0;
 
-        $token_data     = ExamToken::WHERE('status', 'Simulasi')->first();
-
-        if (!$token_data) {
-            // Meneruskan ke halaman tujuan dengan nilai default
+        try {
+            $token_data = ExamToken::where('status', 'Simulasi')->firstOrFail();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return view('guru.statistik', compact('tkpLulus', 'tkpTidakLulus', 'tiuLulus', 'tiuTidakLulus', 'twkLulus', 'twkTidakLulus'));
         }
 
-        $topExams = Exam::where('exam_type', 'Test') // Filter exam_type = 'Test'
-                ->WHERE('token', $token_data->token)
-                ->orderBy('exam_score', 'desc') // Urutkan berdasarkan exam_score secara descending
-                ->take(5) // Ambil 5 nilai tertinggi
-                ->get(); // Ambil hasil
 
         $examData = Exam::where('exam_type', 'Test')
                     ->with('exam_answer')
-                    ->with('exam_answer.question')
                     ->WHERE('token', $token_data->token)
+                    ->WHERE('exam_status', 'Finish')
+                    ->orderBy('exam_score', 'desc')
                     ->get();
 
         foreach($examData as $data){
-            // dd($data);
-            $exam_answers = ExamAnswer::with(['answer', 'question'])
-                ->where('exam_id', $data->exam_id)
-                ->get();
-
             $tkpScore = 0;
             $tiuScore = 0;
             $twkScore = 0;
 
-            foreach ($exam_answers as $exam_answer) {
+            foreach ($data->exam_answer as $exam_answer) {
                 $category = $exam_answer->question->category;
-
-                // if (!$exam_answer->is_false) {
-                //     $categories[$category]['Jawaban_Benar']++;
-                // }
 
                 if ($category == "TKP") {
                     if ($exam_answer->answer_id !== null) {
@@ -214,12 +200,16 @@ class GuruController extends Controller
                     if ($exam_answer->answer_id !== null) {
                         $tiuScore += $exam_answer->answer->answer_score;
                     }
-                }else if ($category == "TKP") {
+                }else if ($category == "TWK") {
                     if ($exam_answer->answer_id !== null) {
                         $twkScore += $exam_answer->answer->answer_score;
                     }
                 }
             }
+
+            $data->tkpScore = $tkpScore;
+            $data->tiuScore = $tiuScore;
+            $data->twkScore = $twkScore;
 
             if ($tkpScore >= 166) {
                 $tkpLulus += 1;
@@ -240,7 +230,7 @@ class GuruController extends Controller
             }
         }
 
-        return view('guru.statistik', compact('topExams', 'tkpLulus', 'tkpTidakLulus', 'tiuLulus', 'tiuTidakLulus', 'twkLulus', 'twkTidakLulus'));
+        return view('guru.statistik', compact('examData', 'tkpLulus', 'tkpTidakLulus', 'tiuLulus', 'tiuTidakLulus', 'twkLulus', 'twkTidakLulus'));
     }
 
     public function printStatistik() {
@@ -251,18 +241,20 @@ class GuruController extends Controller
         $twkLulus       = 0;
         $twkTidakLulus  = 0;
 
-        $topExams = Exam::where('exam_type', 'Test') // Filter exam_type = 'Test'
-                ->orderBy('exam_score', 'desc') // Urutkan berdasarkan exam_score secara descending
-                ->take(5) // Ambil 5 nilai tertinggi
-                ->get(); // Ambil hasil
+        try {
+            $token_data = ExamToken::where('status', 'Simulasi')->firstOrFail();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return view('guru.statistik', compact('tkpLulus', 'tkpTidakLulus', 'tiuLulus', 'tiuTidakLulus', 'twkLulus', 'twkTidakLulus'));
+        }
 
         $examData = Exam::where('exam_type', 'Test')
                     ->with('exam_answer')
-                    ->with('exam_answer.question')
+                    ->WHERE('token', $token_data->token)
+                    ->WHERE('exam_status', 'Finish')
+                    ->orderBy('exam_score', 'desc')
                     ->get();
 
         foreach($examData as $data){
-            // dd($data);
             $exam_answers = ExamAnswer::with(['answer', 'question'])
                 ->where('exam_id', $data->exam_id)
                 ->get();
@@ -274,10 +266,6 @@ class GuruController extends Controller
             foreach ($exam_answers as $exam_answer) {
                 $category = $exam_answer->question->category;
 
-                // if (!$exam_answer->is_false) {
-                //     $categories[$category]['Jawaban_Benar']++;
-                // }
-
                 if ($category == "TKP") {
                     if ($exam_answer->answer_id !== null) {
                         $tkpScore += $exam_answer->answer->answer_score;
@@ -286,12 +274,16 @@ class GuruController extends Controller
                     if ($exam_answer->answer_id !== null) {
                         $tiuScore += $exam_answer->answer->answer_score;
                     }
-                }else if ($category == "TKP") {
+                }else if ($category == "TWK") {
                     if ($exam_answer->answer_id !== null) {
                         $twkScore += $exam_answer->answer->answer_score;
                     }
                 }
             }
+
+            $data->tkpScore = $tkpScore;
+            $data->tiuScore = $tiuScore;
+            $data->twkScore = $twkScore;
 
             if ($tkpScore >= 100) {
                 $tkpLulus += 1;
@@ -313,22 +305,7 @@ class GuruController extends Controller
         }
 
         // Memuat tampilan untuk pencetakan data
-        return view('guru.print-statistik', compact('topExams', 'tkpLulus', 'tkpTidakLulus', 'tiuLulus', 'tiuTidakLulus', 'twkLulus', 'twkTidakLulus'));
-
-        // Menginisialisasi objek Dompdf
-        $dompdf = new Dompdf();
-
-        // Memuat HTML ke Dompdf
-        // $dompdf->loadHtml($html);
-
-        // Mengatur opsi jika diperlukan, seperti nama file hasil cetakan
-        $dompdf->setPaper('A4', 'portrait');
-
-        // Rendering dan menghasilkan output PDF
-        $dompdf->render();
-
-        // Menyimpan atau menawarkan file PDF untuk diunduh oleh pengguna
-        return $dompdf->stream('data_cetak.pdf');
+        return view('guru.print-statistik', compact('examData', 'tkpLulus', 'tkpTidakLulus', 'tiuLulus', 'tiuTidakLulus', 'twkLulus', 'twkTidakLulus'));
     }
 
     public function filterRecap(Request$request){

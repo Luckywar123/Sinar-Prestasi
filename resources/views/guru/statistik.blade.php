@@ -6,36 +6,47 @@
 
 @section('content')
 <div class="row">
+    @if(isset($examData) && $examData->count() > 0)
     <div class="col-2 mb-3 ms-auto">
         <button onclick="printPage('{{ route('printStatistik') }}')" class="btn btn-md w-100" style="background-color: #4FA7F9; color: #000000;">Download</button>
     </div>
+    @endif
+
 
     <div class="col-12">
         <table class="table table-bordered">
             <thead class="text-center" style="background-color: #2F6BB3; color: #DFF8FD">
                 <th>Rank</th>
+                <th>Tanggal Ujian</th>
                 <th>No. Peserta</th>
                 <th>Nama</th>
-                <th>Nilai</th>
+                <th>TKP</th>
+                <th>TIU</th>
+                <th>TWK</th>
+                <th>Score</th>
             </thead>
             <tbody class="table-light" style="color: #1C4B8F">
-                @if(isset($topExams) && $topExams->count() > 0)
-                    @foreach ($topExams as $key => $data)
+                @if(isset($examData) && $examData->count() > 0)
+                    @foreach ($examData as $key => $data)
                     <tr>
                         <td class="align-middle text-center">{{ $key + 1 }}</td>
+                        <td class="align-middle text-center">{{ \Carbon\Carbon::parse($data->exam_start)->format('d M Y') }}</td>
                         <td class="align-middle">{{ $data->student->student_number }}</td>
                         <td class="align-middle">{{ $data->student->user->full_name }}</td>
+                        <td class="align-middle">{{ $data->tkpScore }}</td>
+                        <td class="align-middle">{{ $data->tiuScore }}</td>
+                        <td class="align-middle">{{ $data->twkScore }}</td>
                         <td class="align-middle text-center">{{ $data->exam_score }}</td>
                     </tr>
                     @endforeach
                 @else
-                    <td colspan="4" class="text-center">Tidak ada data yang tersedia untuk token aktif.</td>
+                    <td colspan="8" class="text-center">Tidak ada data yang tersedia untuk token aktif.</td>
                 @endif
             </tbody>
         </table>
     </div>
 
-    @if(isset($topExams) && $topExams->count() > 0)
+    @if(isset($examData) && $examData->count() > 0)
         <div class="col-8">
             <div class="card p-4" style="border-radius: 0.7rem">
                 <canvas id="siswaStatistikChart" width="400" height="200"></canvas>
