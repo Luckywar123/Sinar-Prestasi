@@ -50,7 +50,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('tambah-data-soal', [AdminSoalController::class, 'tambahDataSoal'])->name('tambahDataSoal');
         Route::post('simpan-data-soal', [AdminSoalController::class, 'simpanDataSoal'])->name('simpanDataSoal');
         Route::get('tambah-detail-soal', [AdminSoalController::class, 'tambahDetailSoal'])->name('tambahDetailSoal');
-        Route::post('simpan-detail-soal', [AdminSoalController::class, 'simpanDetailSoal'])->name('simpanDetailSoal');
+       // Route::post('simpan-detail-soal', [AdminSoalController::class, 'simpanDetailSoal'])->name('simpanDetailSoal');
+	Route::post('simpan-detail-soal', [AdminSoalController::class, 'simpanDetailSoal'])->name('simpanDetailSoal');
     });
 
     Route::prefix('siswa')->group(function () {
