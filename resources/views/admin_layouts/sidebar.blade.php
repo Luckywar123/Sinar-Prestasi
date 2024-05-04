@@ -6,6 +6,9 @@
             <a class="nav-link active" href="/admin/list-data-guru">Data Guru</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="/admin/list-data-soal">Data Soal</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="/admin/tambah-data-soal">Tambah Soal</a>
         </li>
         @elseif (auth()->user()->role == "Guru")

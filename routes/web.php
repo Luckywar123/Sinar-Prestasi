@@ -47,10 +47,12 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('update-data-guru/{user_id}', [AdminSoalController::class, 'updateDataGuru'])->name('updateDataGuru');
         Route::get('delete-data-guru/{user_id}', [AdminSoalController::class, 'deleteDataGuru'])->name('deleteDataGuru');
 
+        Route::get('list-data-soal', [AdminSoalController::class, 'listDataSoal'])->name('listDataSoal');
         Route::get('tambah-data-soal', [AdminSoalController::class, 'tambahDataSoal'])->name('tambahDataSoal');
         Route::post('simpan-data-soal', [AdminSoalController::class, 'simpanDataSoal'])->name('simpanDataSoal');
         Route::get('tambah-detail-soal', [AdminSoalController::class, 'tambahDetailSoal'])->name('tambahDetailSoal');
         Route::post('simpan-detail-soal', [AdminSoalController::class, 'simpanDetailSoal'])->name('simpanDetailSoal');
+        Route::get('delete-data-soal/{question_id}', [AdminSoalController::class, 'deleteDataSoal'])->name('deleteDataSoal');
     });
 
     Route::prefix('siswa')->group(function () {

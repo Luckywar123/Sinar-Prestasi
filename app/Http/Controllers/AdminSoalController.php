@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\ExamAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -69,12 +70,32 @@ class AdminSoalController extends Controller
 
     public function deleteDataGuru($user_id)
     {
-        try{
+        try {
             User::destroy($user_id);
             return redirect('admin/list-data-guru')->with('success', 'Data guru berhasil dihapus.');
         } catch (\Exception $e) {
             return redirect('admin/list-data-guru')->with('error', 'Terjadi kesalahan saat menghapus data guru.');
         }
+    }
+
+    public function listDataSoal()
+    {
+        $questions = Question::with('answer')->get();
+        foreach($questions as $question){
+            $exam_answer = ExamAnswer::WHERE('question_id', $question->question_id)->first();
+            if ($exam_answer) {
+                $status = "In Use";
+                $class  = "success";
+            } else {
+                $status = "Not In Use";
+                $class  = "danger";
+            }
+
+            // Menambahkan atribut status dan class ke objek question
+            $question->setAttribute('status', $status);
+            $question->setAttribute('class', $class);
+        }
+        return view('admin.soal.index', ["questions" => $questions]);
     }
 
     public function tambahDataSoal()
@@ -135,7 +156,8 @@ class AdminSoalController extends Controller
 
             if ($request->hasFile('gambar')) {
                 $path = $request->file('gambar')->storeAs(
-                    'public/question_image', $request->file('gambar')->getClientOriginalName()
+                    'public/question_image',
+                    $request->file('gambar')->getClientOriginalName()
                 );
 
                 $path = str_replace('public/', '', $path);
@@ -146,17 +168,17 @@ class AdminSoalController extends Controller
 
             $question_id = $question->question_id;
 
-            try{
+            try {
 
-                if($request->selectedOption == "text"){
+                if ($request->selectedOption == "text") {
                     $jawabanKeys = preg_grep('/^textJawaban\d+$/', array_keys($request->all()));
-                }else if($request->selectedOption == "image"){
+                } else if ($request->selectedOption == "image") {
                     $jawabanKeys = preg_grep('/^imageJawaban\d+$/', array_keys($request->all()));
                 }
 
                 if (!empty($jawabanKeys)) {
                     foreach ($jawabanKeys as $key) {
-                        if($request->selectedOption == "text"){
+                        if ($request->selectedOption == "text") {
                             $index = substr($key, strlen('textJawaban'));
                             $textJawaban = $request->input($key);
 
@@ -171,13 +193,13 @@ class AdminSoalController extends Controller
                                 Answer::destroy($question_id);
                                 return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan jawaban. Jawaban yang Anda masukkan melebihi 7500 karakter.');
                             }
-
-                        }else if($request->selectedOption == "image"){
+                        } else if ($request->selectedOption == "image") {
                             $index = substr($key, strlen('imageJawaban'));
                             $imageJawaban = $request->file($key);
 
                             $path = $request->file($key)->storeAs(
-                                'public/answer_image', $request->file($key)->getClientOriginalName()
+                                'public/answer_image',
+                                $request->file($key)->getClientOriginalName()
                             );
 
                             $path = str_replace('public/', '', $path);
@@ -186,13 +208,13 @@ class AdminSoalController extends Controller
 
                         $score = $request->input('score' . $index);
 
-                        if($request->selectedOption == "text"){
+                        if ($request->selectedOption == "text") {
                             Answer::create([
                                 'question_id'   => $question->question_id,
                                 'answer_text'   => $textJawaban,
                                 'answer_score'  => $score
                             ]);
-                        }else if($request->selectedOption == "image"){
+                        } else if ($request->selectedOption == "image") {
                             Answer::create([
                                 'question_id'       => $question->question_id,
                                 'answer_image_url'  => $answer_image_url,
@@ -204,10 +226,38 @@ class AdminSoalController extends Controller
                 }
             } catch (\Exception $e) {
                 return redirect('admin/tambah-detail-soal')->with('error', 'Terjadi kesalahan saat menyimpan jawaban soal.');
-
             }
         } catch (\Exception $e) {
             return redirect('admin/tambah-detail-soal')->with('error', 'Terjadi kesalahan saat menyimpan data soal.');
+        }
+    }
+
+    public function deleteDataSoal($question_id)
+    {
+        $answer = 0;
+
+        $exam_answers = ExamAnswer::WHERE('question_id', $question_id)->get();
+
+        if ($exam_answers->isEmpty()) {
+            try {
+                $answers    = Answer::where('question_id', $question_id)->get();
+
+                foreach ($answers as $answer) {
+                    $answer += 1;
+                    try {
+                        Answer::destroy(($answer->answer_id));
+                    } catch (\Exception $e) {
+                        return redirect('admin/list-data-soal')->with('error', 'Terjadi kesalahan saat menghapus data jawaban.');
+                    }
+                }
+
+                Question::destroy($question_id);
+                return redirect('admin/list-data-soal')->with('success', 'Data soal dan ' . $answer . ' jawaban terkait berhasil dihapus.');
+            } catch (\Exception $e) {
+                return redirect('admin/list-data-soal')->with('error', 'Terjadi kesalahan saat menghapus data soal.');
+            }
+        } else {
+            return redirect('admin/list-data-soal')->with('error', 'Soal telah digunakan dalam test.');
         }
     }
 }
