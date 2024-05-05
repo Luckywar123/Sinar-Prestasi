@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-12">
                             <p>
-                                {{ $examAnswer->question->question_text }}
+                                {!! $examAnswer->question->question_text !!}
                             </p>
                         </div>
                         @foreach ($examAnswer->question->answer as $answerKey => $answer)

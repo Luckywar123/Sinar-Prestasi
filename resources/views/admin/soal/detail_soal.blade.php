@@ -208,7 +208,7 @@
     });
     </script>
 
-    <script src="{{ asset('js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
+    {{-- <script src="{{ asset('js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
 
     <script>
         tinymce.init({
@@ -222,6 +222,6 @@
             content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
             hidden_input: false
         });
-    </script>
+    </script> --}}
 
 @endpush

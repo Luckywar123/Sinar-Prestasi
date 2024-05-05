@@ -319,7 +319,7 @@ class SiswaController extends Controller
                     $categories[$category]['Jawaban_Benar']++;
                 }
 
-                if ($exam_answer->answer_id !== null) {
+                if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0) {
                     $categories[$category]['Nilai'] += $exam_answer->answer->answer_score;
                 }
             }
