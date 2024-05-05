@@ -45,7 +45,7 @@
                             -
                         @endif
                     </td>
-                    <td class="align-middle" >{{substr($q->question_text, 0, 20) . '...';}}</td>
+                    <td class="align-middle" >{!! substr( $q->question_text, 0, 20) . '...'; !!}</td>
                     <td class="align-middle text-center" >{{ $q->answer->count() }}</td>
                     <td class="align-middle text-center">
                         <span class="badge bg-{{ $q->class }}">{{ $q->status }}</span>
