@@ -74,7 +74,7 @@
                         </tr>
                     @endforeach
                 @else
-                    <td colspan="4" class="text-center">Tidak ada data yang tersedia pada Bulan yang dipilih.</td>
+                    <td colspan="5" class="text-center">Tidak ada data yang tersedia pada Bulan yang dipilih.</td>
                 @endif
             </tbody>
         </table>

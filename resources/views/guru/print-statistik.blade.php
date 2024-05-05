@@ -40,7 +40,8 @@
                     <thead class="text-center" style="background-color: #2F6BB3; color: #DFF8FD">
                         <tr>
                             <th>Rank</th>
-                            <th>Tanggal Ujian</th>
+                            <th>Mulai Ujian</th>
+                            <th>Selesai Ujian</th>
                             <th>No. Peserta</th>
                             <th>Nama</th>
                             <th>TKP</th>
@@ -53,8 +54,8 @@
                         @foreach ($examData as $key => $data)
                             <tr>
                                 <td class="align-middle text-center">{{ $key + 1 }}</td>
-                                <td class="align-middle text-center">
-                                    {{ \Carbon\Carbon::parse($data->exam_start)->format('d M Y') }}</td>
+                                <td class="align-middle text-center">{{ \Carbon\Carbon::parse($data->exam_start)->format('d M Y H:m:s') }}</td>
+                                <td class="align-middle text-center">{{ \Carbon\Carbon::parse($data->exam_finish)->format('d M Y H:m:s') }}</td>
                                 <td class="align-middle">{{ $data->student->student_number }}</td>
                                 <td class="align-middle">{{ $data->student->user->full_name }}</td>
                                 <td class="align-middle">{{ $data->tkpScore }}</td>
