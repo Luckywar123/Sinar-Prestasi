@@ -98,6 +98,116 @@ class AdminSoalController extends Controller
         return view('admin.soal.index', ["questions" => $questions]);
     }
 
+    public function ubahDataSoal($question_id)
+    {
+        $question = Question::findOrFail($question_id);
+        return view('admin.soal.edit', ["question" => $question]);
+    }
+
+    public function updateDataSoal($question_id, Request $request)
+    {
+        dd($request->all());
+        $user_id = auth()->user()->user_id;
+
+        try {
+            // Validasi input menggunakan Validator
+            $question_validation = Validator::make($request->all(), [
+                'question_text' => 'required|string|max:7500',
+            ]);
+
+            // Cek jika validasi gagal
+            if ($question_validation->fails()) {
+                return redirect('admin/list-data-soal')->with('error', 'Gagal menyimpan perubahan data soal. Soal yang Anda masukkan melebihi 7500 karakter.');
+            }
+
+            $question = Question::findOrFail($question_id);
+
+            // Update data lainnya
+            $question->category         = $request->category;
+            $question->sub_category     = $request->sub_category;
+            $question->exam_type        = $request->exam_type;
+            $question->user_id          = $user_id;
+            $question->question_text    = $request->question_text;
+
+
+            if ($request->hasFile('gambar')) {
+                $path = $request->file('gambar')->storeAs(
+                    'public/question_image',
+                    $request->file('gambar')->getClientOriginalName()
+                );
+
+                $path = str_replace('public/', '', $path);
+                $question->question_image_url = $path;
+            }
+
+            $question->save();
+
+            $question_id = $question->question_id;
+
+            try {
+
+                if ($request->selectedOption == "text") {
+                    $jawabanKeys = preg_grep('/^textJawaban\d+$/', array_keys($request->all()));
+                } else if ($request->selectedOption == "image") {
+                    $jawabanKeys = preg_grep('/^imageJawaban\d+$/', array_keys($request->all()));
+                }
+
+                if (!empty($jawabanKeys)) {
+                    foreach ($jawabanKeys as $key) {
+                        if ($request->selectedOption == "text") {
+                            $index = substr($key, strlen('textJawaban'));
+                            $textJawaban = $request->input($key);
+
+                            // Validasi input menggunakan Validator
+                            $answer_validation = Validator::make(['textJawaban' => $textJawaban], [
+                                'textJawaban' => 'required|string|max:7500',
+                            ]);
+
+                            // Cek jika validasi gagal
+                            if ($answer_validation->fails()) {
+                                Question::destroy($question_id);
+                                Answer::destroy($question_id);
+                                return redirect('admin/tambah-data-soal')->with('error', 'Gagal menyimpan jawaban. Jawaban yang Anda masukkan melebihi 7500 karakter.');
+                            }
+                        } else if ($request->selectedOption == "image") {
+                            $index = substr($key, strlen('imageJawaban'));
+                            $imageJawaban = $request->file($key);
+
+                            $path = $request->file($key)->storeAs(
+                                'public/answer_image',
+                                $request->file($key)->getClientOriginalName()
+                            );
+
+                            $path = str_replace('public/', '', $path);
+                            $answer_image_url = $path;
+                        }
+
+                        $score = $request->input('score' . $index);
+
+                        if ($request->selectedOption == "text") {
+                            Answer::create([
+                                'question_id'   => $question->question_id,
+                                'answer_text'   => $textJawaban,
+                                'answer_score'  => $score
+                            ]);
+                        } else if ($request->selectedOption == "image") {
+                            Answer::create([
+                                'question_id'       => $question->question_id,
+                                'answer_image_url'  => $answer_image_url,
+                                'answer_score'      => $score
+                            ]);
+                        }
+                    }
+                    return redirect('admin/tambah-detail-soal')->with('success', 'Data soal, detail soal, dan jawaban berhasil disimpan.');
+                }
+            } catch (\Exception $e) {
+                return redirect('admin/tambah-detail-soal')->with('error', 'Terjadi kesalahan saat menyimpan jawaban soal.');
+            }
+        } catch (\Exception $e) {
+            return redirect('admin/tambah-detail-soal')->with('error', 'Terjadi kesalahan saat menyimpan data soal.');
+        }
+    }
+
     public function tambahDataSoal()
     {
         return view('admin.soal.data_soal');

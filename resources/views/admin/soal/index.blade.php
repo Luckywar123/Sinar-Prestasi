@@ -52,12 +52,12 @@
                     </td>
                     <td class="align-middle text-center" style="width: 16%">
                         <div class="form-group row">
-                            {{-- <div class="col-6">
-                                <a class="form-control btn btn-md rounded" style="border-color: #4FA7F9; color: #4FA7F9;" href="ubah-data-guru/{{ $q->question_id }}">
+                            <div class="col-6">
+                                <a class="form-control btn btn-md rounded" style="border-color: #4FA7F9; color: #4FA7F9;" href="ubah-data-soal/{{ $q->question_id }}">
                                     Edit
                                 </a>
-                            </div> --}}
-                            <div class="col-12">
+                            </div>
+                            <div class="col-6">
                                 <button type="button" class="form-control btn btn-md rounded" style="border-color: #FF4D3D; color: #FF4D3D;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $q->question_id }}">
                                     Hapus
                                 </button>

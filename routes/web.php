@@ -48,6 +48,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('delete-data-guru/{user_id}', [AdminSoalController::class, 'deleteDataGuru'])->name('deleteDataGuru');
 
         Route::get('list-data-soal', [AdminSoalController::class, 'listDataSoal'])->name('listDataSoal');
+        Route::get('ubah-data-soal/{question_id}', [AdminSoalController::class, 'ubahDataSoal'])->name('ubahDataSoal');
+        Route::patch('update-data-soal/{question_id}', [AdminSoalController::class, 'updateDataSoal'])->name('updateDataSoal');
         Route::get('tambah-data-soal', [AdminSoalController::class, 'tambahDataSoal'])->name('tambahDataSoal');
         Route::post('simpan-data-soal', [AdminSoalController::class, 'simpanDataSoal'])->name('simpanDataSoal');
         Route::get('tambah-detail-soal', [AdminSoalController::class, 'tambahDetailSoal'])->name('tambahDetailSoal');
