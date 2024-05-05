@@ -54,9 +54,9 @@
                     <td class="align-middle text-center" style="width: 16%">
                         <div class="form-group row">
                             <div class="col-6">
-                                <a class="form-control btn btn-md rounded" style="border-color: #4FA7F9; color: #4FA7F9;" href="ubah-data-soal/{{ $q->question_id }}">
+                                <button type="button" class="form-control btn btn-md rounded" style="border-color: #4FA7F9; color: #4FA7F9;" data-bs-toggle="modal" data-bs-target="#editModal{{ $q->question_id }}">
                                     Edit
-                                </a>
+                                </button>
                             </div>
                             <div class="col-6">
                                 <button type="button" class="form-control btn btn-md rounded" style="border-color: #FF4D3D; color: #FF4D3D;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $q->question_id }}">
@@ -80,6 +80,25 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                 <a class="btn btn-danger" href="{!! url('admin/delete-data-soal') !!}/{{$q->question_id}}">Hapus</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="editModal{{ $q->question_id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $q->question_id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel{{ $q->question_id }}">Konfirmasi Ubah Soal</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Melakukan perubahan soal dapat berpengaruh pada data test siswa yang menggunakan soal tersebut.
+                                Apakah Anda yakin ingin merubah soal ini?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <a class="btn btn-danger" href="ubah-data-soal/{{ $q->question_id }}">Ubah</a>
+
                             </div>
                         </div>
                     </div>

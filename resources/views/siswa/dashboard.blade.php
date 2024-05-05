@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="content w-75">
+    @if (session()->has('warning'))
+        <div class="alert alert-warning">
+            {{ session()->get('warning') }}
+        </div>
+    @endif
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12">
             <a href="/siswa/simulasi">

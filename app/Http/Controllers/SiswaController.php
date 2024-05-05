@@ -52,13 +52,6 @@ class SiswaController extends Controller
 
         if ($current_exam->isEmpty()) {
             try {
-                $exam = Exam::create([
-                    'exam_type'     => "Simulasi",
-                    'student_id'    => $student->student_id,
-                    'exam_start'    => $current_time,
-                    'exam_status'   => $current_status
-                ]);
-
                 if ($category == "TKP") {
                     $limit = 45;
                 } else if ($category == "TIU") {
@@ -72,6 +65,21 @@ class SiswaController extends Controller
                     ->where('category', $category)
                     ->limit($limit)
                     ->get();
+
+                if($questions->isEmpty()){
+                    return redirect('siswa/simulasi')->with('warning', 'Tidak ada soal tersedia. Harap hubungi admin untuk konfirmasi lebih lanjut.');
+                }
+
+                if ($questions->count() < $limit) {
+                    return redirect('siswa/dashboard')->with('warning', 'Jumlah soal yang tersedia kurang dari jumlah yang dibutuhkan. Harap hubungi admin untuk konfirmasi lebih lanjut.');
+                }
+
+                $exam = Exam::create([
+                    'exam_type'     => "Simulasi",
+                    'student_id'    => $student->student_id,
+                    'exam_start'    => $current_time,
+                    'exam_status'   => $current_status
+                ]);
 
                 foreach ($questions as $question) {
                     try {
@@ -418,14 +426,6 @@ class SiswaController extends Controller
 
             if ($current_exam->isEmpty()) {
                 try {
-                    $exam = Exam::create([
-                        'exam_type'     => $exam_type,
-                        'student_id'    => $student->student_id,
-                        'exam_start'    => $current_time,
-                        'exam_status'   => $current_status,
-                        'token'         => $token
-                    ]);
-
                     foreach ($categories as $category) {
 
                         if ($category == "TKP") {
@@ -444,7 +444,23 @@ class SiswaController extends Controller
 
                         // Menggabungkan pertanyaan dari setiap kategori ke dalam koleksi utama
                         $questions = $questions->merge($questionsPerCategory);
+
+                        if($questions->isEmpty()){
+                            return redirect('siswa/dashboard')->with('warning', 'Tidak ada soal tersedia. Harap hubungi admin untuk konfirmasi lebih lanjut.');
+                        }
+
+                        if ($questions->count() < 110) {
+                            return redirect('siswa/dashboard')->with('warning', 'Jumlah soal yang tersedia kurang dari jumlah yang dibutuhkan. Harap hubungi admin untuk konfirmasi lebih lanjut.');
+                        }
                     }
+
+                    $exam = Exam::create([
+                        'exam_type'     => $exam_type,
+                        'student_id'    => $student->student_id,
+                        'exam_start'    => $current_time,
+                        'exam_status'   => $current_status,
+                        'token'         => $token
+                    ]);
 
                     foreach ($questions as $question) {
                         try {
