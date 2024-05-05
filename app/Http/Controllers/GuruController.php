@@ -193,15 +193,15 @@ class GuruController extends Controller
                 $category = $exam_answer->question->category;
 
                 if ($category == "TKP") {
-                    if ($exam_answer->answer_id !== null) {
+                    if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0 ) {
                         $tkpScore += $exam_answer->answer->answer_score;
                     }
                 }else if ($category == "TIU") {
-                    if ($exam_answer->answer_id !== null) {
+                    if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0) {
                         $tiuScore += $exam_answer->answer->answer_score;
                     }
                 }else if ($category == "TWK") {
-                    if ($exam_answer->answer_id !== null) {
+                    if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0) {
                         $twkScore += $exam_answer->answer->answer_score;
                     }
                 }
@@ -267,15 +267,15 @@ class GuruController extends Controller
                 $category = $exam_answer->question->category;
 
                 if ($category == "TKP") {
-                    if ($exam_answer->answer_id !== null) {
+                    if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0) {
                         $tkpScore += $exam_answer->answer->answer_score;
                     }
                 }else if ($category == "TIU") {
-                    if ($exam_answer->answer_id !== null) {
+                    if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0) {
                         $tiuScore += $exam_answer->answer->answer_score;
                     }
                 }else if ($category == "TWK") {
-                    if ($exam_answer->answer_id !== null) {
+                    if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0) {
                         $twkScore += $exam_answer->answer->answer_score;
                     }
                 }
@@ -285,21 +285,21 @@ class GuruController extends Controller
             $data->tiuScore = $tiuScore;
             $data->twkScore = $twkScore;
 
-            if ($tkpScore >= 100) {
+            if ($tkpScore >= 166) {
                 $tkpLulus += 1;
-            }else if ($tkpScore <= 100) {
+            }else if ($tkpScore < 166) {
                 $tkpTidakLulus += 1;
             }
 
-            if ($twkScore >= 100) {
+            if ($twkScore >= 65) {
                 $twkLulus += 1;
-            }else if ($twkScore <= 100) {
+            }else if ($twkScore < 65) {
                 $twkTidakLulus += 1;
             }
 
-            if ($tiuScore >= 100) {
+            if ($tiuScore >= 80) {
                 $tiuLulus += 1;
-            }else if ($tiuScore <= 100) {
+            }else if ($tiuScore < 80) {
                 $tiuTidakLulus += 1;
             }
         }
