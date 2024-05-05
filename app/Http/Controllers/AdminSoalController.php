@@ -106,7 +106,6 @@ class AdminSoalController extends Controller
 
     public function updateDataSoal($question_id, Request $request)
     {
-        dd($request->all());
         $user_id = auth()->user()->user_id;
 
         try {
@@ -184,27 +183,24 @@ class AdminSoalController extends Controller
 
                         $score = $request->input('score' . $index);
 
+                        $answer = Answer::findOrFail($index);
+
                         if ($request->selectedOption == "text") {
-                            Answer::create([
-                                'question_id'   => $question->question_id,
-                                'answer_text'   => $textJawaban,
-                                'answer_score'  => $score
-                            ]);
+                            $answer->answer_text    = $textJawaban;
                         } else if ($request->selectedOption == "image") {
-                            Answer::create([
-                                'question_id'       => $question->question_id,
-                                'answer_image_url'  => $answer_image_url,
-                                'answer_score'      => $score
-                            ]);
+                            $answer->answer_image_url   = $answer_image_url;
                         }
+
+                        $answer->answer_score   = $score;
+                        $answer->save();
                     }
-                    return redirect('admin/tambah-detail-soal')->with('success', 'Data soal, detail soal, dan jawaban berhasil disimpan.');
+                    return redirect('admin/list-data-soal')->with('success', 'Data soal, detail soal, dan jawaban berhasil diubah.');
                 }
             } catch (\Exception $e) {
-                return redirect('admin/tambah-detail-soal')->with('error', 'Terjadi kesalahan saat menyimpan jawaban soal.');
+                return redirect('admin/list-data-soal')->with('error', 'Terjadi kesalahan saat mengubah jawaban soal.');
             }
         } catch (\Exception $e) {
-            return redirect('admin/tambah-detail-soal')->with('error', 'Terjadi kesalahan saat menyimpan data soal.');
+            return redirect('admin/list-data-soal')->with('error', 'Terjadi kesalahan saat mengubah data soal.');
         }
     }
 

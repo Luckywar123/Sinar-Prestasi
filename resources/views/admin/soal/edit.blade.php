@@ -41,6 +41,22 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group row mb-4">
+                            <label for="simulasi" class="col-sm-2 col-form-label text-right">{{ __('Tipe Ujian') }} <span
+                                    style="color: red">*</span></label>
+                            <div class="col-sm-10">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="exam_type" id="simulasi"
+                                        value="Simulasi" required @if ($question->exam_type === 'Simulasi') checked @endif>
+                                    <label for="simulasi" class="form-check-label">Simulasi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="exam_type" id="test"
+                                        value="Test" required @if ($question->exam_type === 'Test') checked @endif>
+                                    <label for="test" class="form-check-label">Test</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card rounded-5 mt-3 py-2" style="border-radius: 1rem">
@@ -58,8 +74,13 @@
                         </div>
                         <div class="form-group row mb-4">
                             <div class="col-sm-12">
+                                <?php
+                                $html = $question->question_text;
+                                $plaintext = strip_tags($html);
+                                ?>
+
                                 <textarea class="form-control" style="border: none; resize: none; outline: none;" rows="5"
-                                    placeholder="Ketik di sini.." id="question_text" name="question_text">{{ $question->question_text }}</textarea>
+                                    placeholder="Ketik di sini.." id="question_text" name="question_text">{{ $plaintext }}</textarea>
                             </div>
                         </div>
                         <div class="form-group row mb-4">
@@ -83,6 +104,7 @@
                     <div class="card-body px-5 py-4">
                         @foreach ($question->answer as $answer)
                             @if ($answer->answer_image_url != null)
+                                <input type="hidden" name="selectedOption" value="image">
                                 <img id="previewAnswer{{ $answer->answer_id }}"
                                     src="{{ asset('storage/' . $answer->answer_image_url) }}" alt="Preview"
                                     style="display: block; width: max-width; height: 200px">
@@ -101,11 +123,13 @@
                                     </div>
                                 </div>
                             @else
+                                <input type="hidden" name="selectedOption" value="text">
                                 <div class="form-group row mb-4">
                                     <div class="col-md-10">
-                                        <input type="text" class="form-control" id="textJawaban{{ $answer->answer_id }}"
-                                            name="textJawaban{{ $answer->answer_id }}" value="{{ $answer->answer_text }}"
-                                            required>
+                                        <input type="text" class="form-control"
+                                            id="textJawaban{{ $answer->answer_id }}"
+                                            name="textJawaban{{ $answer->answer_id }}"
+                                            value="{{ $answer->answer_text }}" required>
                                     </div>
                                     <div class="col-md-2">
                                         <input type="number" class="form-control" id="score{{ $answer->answer_id }}"
@@ -115,8 +139,6 @@
                                 </div>
                             @endif
                         @endforeach
-                        <input type="hidden" id="selectedOption" name="selectedOption" value="text">
-                        <!-- Input hidden untuk menyimpan nilai radio button yang dipilih -->
                         <div class="form-group row mt-5">
                             <div class="col-sm-12">
                                 <button type="submit" class="btn btn-primary form-control"
@@ -185,7 +207,7 @@
 
             function updateSubcategoryOptions(category) {
                 // Hapus semua opsi subkategori
-                subcategorySelect.innerHTML ='<option value="" selected disabled hidden>Pilih Sub Soal</option>';
+                subcategorySelect.innerHTML = '<option value="" selected disabled hidden>Pilih Sub Soal</option>';
 
                 // Tambahkan opsi subkategori berdasarkan kategori yang dipilih
                 if (category === 'TKP') {
@@ -204,7 +226,7 @@
                     ]);
                 }
 
-                if(category === "{{ $question->sub_category }}") {
+                if (category === "{{ $question->category }}") {
                     // Set nilai awal terpilih untuk subkategori berdasarkan nilai $question->sub_category
                     subcategorySelect.value = "{{ $question->sub_category }}";
                 }
