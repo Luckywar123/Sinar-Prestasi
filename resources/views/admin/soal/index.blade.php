@@ -36,6 +36,7 @@
             </thead>
             <tbody class="table-light" style="color: #1C4B8F">
                 @foreach($questions as $k => $q)
+
                 <tr>
                     <td class="align-middle text-center">{{ $k+1 }}</td>
                     <td class="align-middle text-center">
@@ -45,7 +46,7 @@
                             -
                         @endif
                     </td>
-                    <td class="align-middle" >{!! substr( $q->question_text, 0, 20) . '...'; !!}</td>
+                    <td class="align-middle" >{!! substr(strip_tags($q->question_text), 0, 50) . '...' !!}</td>
                     <td class="align-middle text-center" >{{ $q->answer->count() }}</td>
                     <td class="align-middle text-center">
                         <span class="badge bg-{{ $q->class }}">{{ $q->status }}</span>
