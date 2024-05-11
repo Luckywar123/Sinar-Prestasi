@@ -448,10 +448,10 @@ class SiswaController extends Controller
                         if($questions->isEmpty()){
                             return redirect('siswa/dashboard')->with('warning', 'Tidak ada soal tersedia. Harap hubungi admin untuk konfirmasi lebih lanjut.');
                         }
+                    }
 
-                        if ($questions->count() < 110) {
-                            return redirect('siswa/dashboard')->with('warning', 'Jumlah soal yang tersedia kurang dari jumlah yang dibutuhkan. Harap hubungi admin untuk konfirmasi lebih lanjut.');
-                        }
+                    if ($questions->count() < 110) {
+                        return redirect('siswa/dashboard')->with('warning', 'Jumlah soal yang tersedia kurang dari jumlah yang dibutuhkan. Harap hubungi admin untuk konfirmasi lebih lanjut.');
                     }
 
                     $exam = Exam::create([
