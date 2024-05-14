@@ -438,10 +438,18 @@ class SiswaController extends Controller
                         } else if ($category == "TWK") {
                             $limit = 30;
                         }
-                        // Mengambil 35 pertanyaan untuk setiap kategori
+
+                        // Ambil daftar ID ujian yang pernah dikerjakan oleh siswa
+                        $examIdsByStudent = Exam::where('student_id', $student->student_id)->pluck('exam_id');
+
+                        // Ambil daftar ID pertanyaan yang pernah dikerjakan oleh siswa
+                        $answeredQuestionIds = ExamAnswer::whereIn('exam_id', $examIdsByStudent)->pluck('question_id');
+
+                        // Mengambil pertanyaan untuk setiap kategori
                         $questionsPerCategory = Question::inRandomOrder()
                             ->where('exam_type', $exam_type)
                             ->where('category', $category)
+                            ->whereNotIn('question_id', $answeredQuestionIds)
                             ->limit($limit)
                             ->get();
 
@@ -449,7 +457,7 @@ class SiswaController extends Controller
                         $questions = $questions->merge($questionsPerCategory);
 
                         if($questions->isEmpty()){
-                            return redirect('siswa/dashboard')->with('warning', 'Tidak ada soal tersedia. Harap hubungi admin untuk konfirmasi lebih lanjut.');
+                            return redirect('siswa/dashboard')->with('warning', 'Tidak ada soal tersedia untuk kategori '.$category.'. Harap hubungi admin untuk konfirmasi lebih lanjut.');
                         }
                     }
 
