@@ -14,16 +14,21 @@
 @section('content')
     <div class="content w-50">
         <table class="table table-bordered table-rounded">
-            <thead class="text-center" style="background-color: #2F6BB3; color: #DFF8FD">
-                <tr>
-                    <th style="border-top-left-radius: 1rem">No</th>
-                    <th>Tanggal Ujian</th>
-                    <th>Waktu Ujian</th>
-                    <th>Kategori</th>
-                    <th>Nilai</th>
-                    <th style="border-top-right-radius: 1rem">Aksi</th>
-                </tr>
-            </thead>
+            <tr class="text-center" style="background-color: #2F6BB3; color: #DFF8FD;">
+                <th style="border-top-left-radius: 1rem; vertical-align: middle;" rowspan="2">No</th>
+                <th style="vertical-align: middle;" rowspan="2">Tanggal Ujian</th>
+                <th style="vertical-align: middle;" rowspan="2">Waktu Ujian</th>
+                <th style="vertical-align: middle;" rowspan="2">Kategori</th>
+                <th colspan="3">Nilai</th>
+                <th style="vertical-align: middle;" style="border-top-right-radius: 1rem" rowspan="2">Aksi</th>
+            </tr>
+            <tr class="table" style="background-color: #2F6BB3; color: #DFF8FD">
+                <th>TKP</th>
+                <th>TIU</th>
+                <th>TWK</th>
+            </tr>
+
+
             <tbody class="table-light" style="color: #1C4B8F">
                 @foreach ($exams as $k => $exam)
                     <tr class="align-middle">
@@ -39,7 +44,13 @@
                                 Uncategorized
                             @endif
                         </td>
-                        <td>{{ $exam -> exam_score }}</td>
+                        @if ($exam->exam_type == "Simulasi")
+                            <td colspan="3">{{ $exam -> exam_score }}</td>
+                        @else
+                            <td>{{ $exam -> tkpScore }}</td>
+                            <td>{{ $exam -> tiuScore }}</td>
+                            <td>{{ $exam -> twkScore }}</td>
+                        @endif
                         <td>
                             @if ($exam->exam_type == "Test")
                                 <a class="form-control btn btn-sm rounded" style="border-color: #4FA7F9; color: #4FA7F9;" href="#" data-bs-toggle="modal" data-bs-target="#tokenModal{{ $k }}">

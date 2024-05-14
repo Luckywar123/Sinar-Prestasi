@@ -66,7 +66,7 @@ class SiswaController extends Controller
                     ->limit($limit)
                     ->get();
 
-                if($questions->isEmpty()){
+                if ($questions->isEmpty()) {
                     return redirect('siswa/simulasi')->with('warning', 'Tidak ada soal tersedia. Harap hubungi admin untuk konfirmasi lebih lanjut.');
                 }
 
@@ -236,7 +236,7 @@ class SiswaController extends Controller
                 continue;
             }
 
-            if($exam_answer->is_false == 0){
+            if ($exam_answer->is_false == 0) {
                 $exam_scores += $exam_answer->answer->answer_score;
             }
         }
@@ -456,8 +456,8 @@ class SiswaController extends Controller
                         // Menggabungkan pertanyaan dari setiap kategori ke dalam koleksi utama
                         $questions = $questions->merge($questionsPerCategory);
 
-                        if($questions->isEmpty()){
-                            return redirect('siswa/dashboard')->with('warning', 'Tidak ada soal tersedia untuk kategori '.$category.'. Harap hubungi admin untuk konfirmasi lebih lanjut.');
+                        if ($questions->isEmpty()) {
+                            return redirect('siswa/dashboard')->with('warning', 'Tidak ada soal tersedia untuk kategori ' . $category . '. Harap hubungi admin untuk konfirmasi lebih lanjut.');
                         }
                     }
 
@@ -601,13 +601,58 @@ class SiswaController extends Controller
         }
     }
 
+    // public function riwayatTest()
+    // {
+    //     $auth       = Auth::user();
+    //     $user_id    = $auth->user_id;
+    //     $student    = Student::WHERE('user_id', $user_id)->first();
+    //     $exams      = Exam::WHERE('student_id', $student->student_id)->ORDERBY('created_at', 'DESC')->LIMIT(10)->get();
+    //     return view('siswa.riwayat', ['exams' => $exams]);
+    // }
+
     public function riwayatTest()
     {
         $auth       = Auth::user();
         $user_id    = $auth->user_id;
         $student    = Student::WHERE('user_id', $user_id)->first();
-        $exams      = Exam::WHERE('student_id', $student->student_id)->ORDERBY('created_at', 'DESC')->LIMIT(10)->get();
-        return view('siswa.riwayat', ['exams' => $exams]);
+        $student_id = $student->student_id;
+
+        $examData = Exam::with('exam_answer')
+            ->WHERE('student_id', $student_id)
+            ->ORDERBY('created_at', 'DESC')
+            ->LIMIT(10)
+            ->get();
+
+        foreach ($examData as $data) {
+            $tkpScore = 0;
+            $tiuScore = 0;
+            $twkScore = 0;
+
+            foreach ($data->exam_answer as $exam_answer) {
+                $category = $exam_answer->question->category;
+
+                if ($category == "TKP") {
+                    if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0) {
+                        $tkpScore += $exam_answer->answer->answer_score;
+                    }
+                } else if ($category == "TIU") {
+                    if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0) {
+                        $tiuScore += $exam_answer->answer->answer_score;
+                    }
+                } else if ($category == "TWK") {
+                    if ($exam_answer->answer_id !== null && $exam_answer->is_false == 0) {
+                        $twkScore += $exam_answer->answer->answer_score;
+                    }
+                }
+            }
+
+            $data->tkpScore = $tkpScore;
+            $data->tiuScore = $tiuScore;
+            $data->twkScore = $twkScore;
+
+        }
+
+        return view('siswa.riwayat', ['exams' => $examData]);
     }
 
     public function downloadSoal(Request $request)
