@@ -1,14 +1,18 @@
 @extends('bimbel_layouts.master')
 
 @section('style')
-<style>
-    body {
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE 10+/Edge */
-    user-select: none; /* Standard */
-}
-</style>
+    <style>
+        body {
+            -webkit-user-select: none;
+            /* Safari */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* IE 10+/Edge */
+            user-select: none;
+            /* Standard */
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -35,7 +39,9 @@
                             </div>
                             <div class="col-md-3 col-sm12 mb-3">
                                 @if (!empty($examAnswer->question->question_image_url))
-                                    <img class="img-fluid" src="{{ asset('storage/' . $examAnswer->question->question_image_url) }}" alt="Question Image" />
+                                    <img class="img-fluid"
+                                        src="{{ asset('storage/' . $examAnswer->question->question_image_url) }}"
+                                        alt="Question Image" />
                                 @endif
                             </div>
                             <div class="col-12">
@@ -45,31 +51,40 @@
                             </div>
                             @foreach ($examAnswer->question->answer as $answerKey => $answer)
                                 @if (!empty($answer->answer_text))
-                                    <div class="col-12 d-flex align-items-center" onclick="selectAnswer({{ $key }}, {{ $answerKey }}, {{ $answer->answer_id }}, {{ $examAnswer->exam_answer_id }})" @if($examAnswer->answer_id == $answer->answer_id) style="background-color: #4FA7F9;" @endif>
-                                        <p class="mt-3">{{ strtoupper(chr(97 + $answerKey)) }}. {{ $answer->answer_text }}</p>
+                                    <div class="col-12 d-flex align-items-center"
+                                        onclick="selectAnswer({{ $key }}, {{ $answerKey }}, {{ $answer->answer_id }}, {{ $examAnswer->exam_answer_id }})"
+                                        @if ($examAnswer->answer_id == $answer->answer_id) style="background-color: #4FA7F9;" @endif>
+                                        <p class="mt-3">{{ strtoupper(chr(97 + $answerKey)) }}.
+                                            {{ $answer->answer_text }}</p>
                                     </div>
                                 @endif
                                 @if (!empty($answer->answer_image_url))
-                                    <div class="col-12 d-flex align-items-center my-3" onclick="selectAnswer({{ $key }}, {{ $answerKey }}, {{ $answer->id }}, {{ $examAnswer->id }})" @if($examAnswer->answer_id == $answer->answer_id) style="background-color: #4FA7F9;" @endif>
+                                    <div class="col-12 d-flex align-items-center my-3"
+                                        onclick="selectAnswer({{ $key }}, {{ $answerKey }}, {{ $answer->id }}, {{ $examAnswer->id }})"
+                                        @if ($examAnswer->answer_id == $answer->answer_id) style="background-color: #4FA7F9;" @endif>
                                         <p>{{ strtoupper(chr(97 + $answerKey)) }}</p>
-                                        <img class="ms-3" style="width: 469px; height: 200px" src="{{ asset('storage/' . $answer->answer_image_url) }}" />
+                                        <img class="ms-3" style="width: 469px; height: 200px"
+                                            src="{{ asset('storage/' . $answer->answer_image_url) }}" />
                                     </div>
                                 @endif
                             @endforeach
 
                             <div class="col-12 d-flex my-5">
-                                <button class="btn btn-md btn-secondary" style="width: 140px; background-color: #A6A6A6; border-color:#A6A6A6" onclick="previousSoal()">
+                                <button class="btn btn-md btn-secondary"
+                                    style="width: 140px; background-color: #A6A6A6; border-color:#A6A6A6"
+                                    onclick="previousSoal()">
                                     Back
                                 </button>
                                 @if ($key === count($questions) - 1)
-                                    <form id="formSelesaiSimulasi" action="/siswa/selesai-simulasi" method="POST">
-                                        @csrf
-                                        <button type="Submit" class="btn btn-md btn-secondary mx-4" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
-                                            Selesai
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-md btn-secondary mx-4"
+                                        style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA"
+                                        onclick="showFinishConfirmation()">
+                                        Selesai
+                                    </button>
                                 @else
-                                    <button class="btn btn-md btn-secondary mx-4" style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA" onclick="nextSoal()">
+                                    <button class="btn btn-md btn-secondary mx-4"
+                                        style="width:140px; background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA"
+                                        onclick="nextSoal()">
                                         Next
                                     </button>
                                 @endif
@@ -82,7 +97,10 @@
                         <div class="card rounded align-items-center" style="background-color: #DFF8FD">
                             <div class="card-body">
                                 @foreach ($questions as $key => $examAnswer)
-                                    <button id="navigationBtn{{$key}}" @if (!empty($examAnswer->answer_id)) class="btn btn-sm btn-primary mb-1" @else class="btn btn-sm btn-secondary mb-1" @endif style="width: 42px" onclick="tampilkanSoal({{ $key }})">{{ $key+1 }}</button>
+                                    <button id="navigationBtn{{ $key }}"
+                                        @if (!empty($examAnswer->answer_id)) class="btn btn-sm btn-primary mb-1" @else class="btn btn-sm btn-secondary mb-1" @endif
+                                        style="width: 42px"
+                                        onclick="tampilkanSoal({{ $key }})">{{ $key + 1 }}</button>
                                 @endforeach
                             </div>
                         </div>
@@ -91,170 +109,198 @@
             </div>
         </div>
     </div>
+    <!-- Modal Konfirmasi Selesai -->
+    <div class="modal fade" id="confirmFinishModal" tabindex="-1" aria-labelledby="confirmFinishModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmFinishModalLabel">Konfirmasi Selesai</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menyelesaikan test ini?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <form id="formSelesaiSimulasi" action="/siswa/selesai-simulasi" method="POST">
+                        @csrf
+                        <button type="Submit" class="btn" style="background-color: #5DB6FA; color: #0F3077; border-color:#5DB6FA">
+                            Selesai
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
-<script>
-    let currentIndex = 0;
-    let jumlahSoal = {{ count($questions) }};
+    <script>
+        function showFinishConfirmation() {
+            $('#confirmFinishModal').modal('show'); // Tampilkan modal konfirmasi
+        }
 
-    // Objek untuk menyimpan status jawaban
-    let selectedAnswers = {};
+        let currentIndex = 0;
+        let jumlahSoal = {{ count($questions) }};
+
+        // Objek untuk menyimpan status jawaban
+        let selectedAnswers = {};
 
 
-    // Fungsi untuk menampilkan soal
-    function tampilkanSoal(index) {
-        let allSoal = document.querySelectorAll('.soal');
-        allSoal.forEach(function(soal) {
-            soal.style.display = 'none';
-        });
+        // Fungsi untuk menampilkan soal
+        function tampilkanSoal(index) {
+            let allSoal = document.querySelectorAll('.soal');
+            allSoal.forEach(function(soal) {
+                soal.style.display = 'none';
+            });
 
-        let soal = document.querySelector(`#soal-${index}`);
-        soal.style.display = 'block';
-        window.scrollTo(0, 0); // Mengatur scroll ke bagian atas halaman
-        currentIndex = index;
+            let soal = document.querySelector(`#soal-${index}`);
+            soal.style.display = 'block';
+            window.scrollTo(0, 0); // Mengatur scroll ke bagian atas halaman
+            currentIndex = index;
 
-        // Set gaya jawaban yang dipilih jika ada
-        if (selectedAnswers[index] !== undefined) {
-            let selectedAnswerIndex = selectedAnswers[index].answerIndex; // Ambil properti answerIndex
-            let selectedAnswer = document.querySelector(`#soal-${index} .d-flex:nth-child(${selectedAnswerIndex + 6})`);
+            // Set gaya jawaban yang dipilih jika ada
+            if (selectedAnswers[index] !== undefined) {
+                let selectedAnswerIndex = selectedAnswers[index].answerIndex; // Ambil properti answerIndex
+                let selectedAnswer = document.querySelector(`#soal-${index} .d-flex:nth-child(${selectedAnswerIndex + 6})`);
+                if (selectedAnswer) {
+                    selectedAnswer.style.backgroundColor = '#4FA7F9'; // Set warna biru pada jawaban yang dipilih
+                }
+            }
+        }
+
+        // Fungsi untuk memilih jawaban
+        function selectAnswer(soalIndex, answerIndex, answerId, examAnswerId) {
+            // Reset style jawaban sebelumnya jika ada
+            let allAnswers = document.querySelectorAll(`#soal-${soalIndex} .d-flex`);
+            allAnswers.forEach(function(answer) {
+                answer.style.backgroundColor = 'inherit';
+                answer.style.border = 'none'; // Hapus border dari semua jawaban
+            });
+
+            // Set style untuk jawaban yang dipilih
+            let selectedAnswer = document.querySelector(`#soal-${soalIndex} .d-flex:nth-child(${answerIndex + 6})`);
             if (selectedAnswer) {
-                selectedAnswer.style.backgroundColor = '#4FA7F9'; // Set warna biru pada jawaban yang dipilih
+                selectedAnswer.style.backgroundColor = '#4FA7F9';
+                console.log(`navigationBtn${soalIndex}`);
+                document.getElementById(`navigationBtn${soalIndex}`).classList.remove("btn-secondary");
+                document.getElementById(`navigationBtn${soalIndex}`).classList.add("btn-primary");
+            }
+
+            // Simpan jawaban yang dipilih ke dalam objek status
+            selectedAnswers[soalIndex] = {
+                answerIndex: answerIndex,
+                answerId: answerId,
+                examAnswerId: examAnswerId
+            };
+
+            // Kirim data jawaban yang dipilih ke controller menggunakan AJAX
+            let formData = new FormData();
+            formData.append('soalIndex', soalIndex);
+            formData.append('answerIndex', answerIndex);
+            formData.append('answerId', answerId);
+
+            // Menggunakan URL dengan exam_answer_id sebagai bagian dari rute
+            fetch('{{ route('simpanJawabanSimulasi', ':exam_answer_id') }}'.replace(':exam_answer_id', examAnswerId), {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Tampilkan respons dari server dalam konsol
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Fungsi untuk menavigasi ke halaman soal sebelumnya
+        function previousSoal() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                tampilkanSoal(currentIndex);
             }
         }
-    }
 
-    // Fungsi untuk memilih jawaban
-    function selectAnswer(soalIndex, answerIndex, answerId, examAnswerId) {
-        // Reset style jawaban sebelumnya jika ada
-        let allAnswers = document.querySelectorAll(`#soal-${soalIndex} .d-flex`);
-        allAnswers.forEach(function(answer) {
-            answer.style.backgroundColor = 'inherit';
-            answer.style.border = 'none'; // Hapus border dari semua jawaban
-        });
-
-        // Set style untuk jawaban yang dipilih
-        let selectedAnswer = document.querySelector(`#soal-${soalIndex} .d-flex:nth-child(${answerIndex + 6})`);
-        if (selectedAnswer) {
-            selectedAnswer.style.backgroundColor = '#4FA7F9';
-            console.log(`navigationBtn${soalIndex}`);
-            document.getElementById(`navigationBtn${soalIndex}`).classList.remove("btn-secondary");
-            document.getElementById(`navigationBtn${soalIndex}`).classList.add("btn-primary");
-        }
-
-        // Simpan jawaban yang dipilih ke dalam objek status
-        selectedAnswers[soalIndex] = {
-            answerIndex: answerIndex,
-            answerId: answerId,
-            examAnswerId: examAnswerId
-        };
-
-        // Kirim data jawaban yang dipilih ke controller menggunakan AJAX
-        let formData = new FormData();
-        formData.append('soalIndex', soalIndex);
-        formData.append('answerIndex', answerIndex);
-        formData.append('answerId', answerId);
-
-        // Menggunakan URL dengan exam_answer_id sebagai bagian dari rute
-        fetch('{{ route("simpanJawabanSimulasi", ":exam_answer_id") }}'.replace(':exam_answer_id', examAnswerId), {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        // Fungsi untuk menavigasi ke halaman soal berikutnya
+        function nextSoal() {
+            if (currentIndex < jumlahSoal - 1) {
+                currentIndex++;
+                tampilkanSoal(currentIndex);
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data); // Tampilkan respons dari server dalam konsol
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-
-    // Fungsi untuk menavigasi ke halaman soal sebelumnya
-    function previousSoal() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            tampilkanSoal(currentIndex);
         }
-    }
 
-    // Fungsi untuk menavigasi ke halaman soal berikutnya
-    function nextSoal() {
-        if (currentIndex < jumlahSoal - 1) {
-            currentIndex++;
-            tampilkanSoal(currentIndex);
+        // Fungsi untuk menampilkan timer
+        function displayTimer(remainingTime) {
+            let timerElement = document.getElementById('timer');
+            let hours = Math.floor(remainingTime / 3600); // Menghitung jumlah jam
+            let minutes = Math.floor((remainingTime % 3600) / 60); // Menghitung jumlah menit
+            let seconds = remainingTime % 60; // Menghitung jumlah detik
+
+            // Format waktu dengan menambahkan nol di depan angka jika hanya satu digit
+            let formattedTime = hours.toString().padStart(2, '0') + ':' +
+                minutes.toString().padStart(2, '0') + ':' +
+                seconds.toString().padStart(2, '0');
+
+            timerElement.textContent = formattedTime;
+
+            // Jika waktu habis, lakukan tindakan yang sesuai
+            if (remainingTime <= 0) {
+                // Tampilkan pesan atau lakukan tindakan yang sesuai
+                timerElement.textContent = '00:00:00';
+                document.getElementById("formSelesaiSimulasi").submit(); // Kirim formulir saat waktu habis
+            }
         }
-    }
 
-    // Fungsi untuk menampilkan timer
-    function displayTimer(remainingTime) {
-        let timerElement = document.getElementById('timer');
-        let hours = Math.floor(remainingTime / 3600); // Menghitung jumlah jam
-        let minutes = Math.floor((remainingTime % 3600) / 60); // Menghitung jumlah menit
-        let seconds = remainingTime % 60; // Menghitung jumlah detik
+        // Fungsi untuk mengupdate timer setiap detik
+        function updateTimer() {
+            let remainingTime = {{ $remainingTime }}; // Ganti dengan cara yang sesuai dengan implementasi Anda
 
-        // Format waktu dengan menambahkan nol di depan angka jika hanya satu digit
-        let formattedTime = hours.toString().padStart(2, '0') + ':' +
-                            minutes.toString().padStart(2, '0') + ':' +
-                            seconds.toString().padStart(2, '0');
-
-        timerElement.textContent = formattedTime;
-
-        // Jika waktu habis, lakukan tindakan yang sesuai
-        if (remainingTime <= 0) {
-            // Tampilkan pesan atau lakukan tindakan yang sesuai
-            timerElement.textContent = '00:00:00';
-            document.getElementById("formSelesaiSimulasi").submit(); // Kirim formulir saat waktu habis
-        }
-    }
-
-    // Fungsi untuk mengupdate timer setiap detik
-    function updateTimer() {
-        let remainingTime = {{ $remainingTime }}; // Ganti dengan cara yang sesuai dengan implementasi Anda
-
-        // Tampilkan timer awal
-        displayTimer(remainingTime);
-
-        // Perbarui timer setiap detik
-        let intervalId = setInterval(function() {
-            remainingTime--;
+            // Tampilkan timer awal
             displayTimer(remainingTime);
 
-            // Hentikan interval jika waktu habis
-            if (remainingTime <= 0) {
-                clearInterval(intervalId);
-            }
-        }, 1000);
-    }
+            // Perbarui timer setiap detik
+            let intervalId = setInterval(function() {
+                remainingTime--;
+                displayTimer(remainingTime);
 
-    // Panggil fungsi updateTimer saat halaman dimuat
-    window.onload = function() {
-        updateTimer();
-    };
-
-    window.addEventListener('contextmenu', function (e) {
-        e.preventDefault();
-    });
-
-    document.addEventListener("visibilitychange", function() {
-        if (document.hidden) {
-            // Tab nonaktif, lakukan logout dengan metode POST
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '{{ route("logout") }}'; // Ganti dengan route logout yang sesuai
-
-            // Tambahkan CSRF token ke dalam form
-            const csrfToken = document.createElement('input');
-            csrfToken.type = 'hidden';
-            csrfToken.name = '_token';
-            csrfToken.value = '{{ csrf_token() }}'; // Mendapatkan nilai CSRF token dari Laravel
-
-            form.appendChild(csrfToken);
-            document.body.appendChild(form);
-            form.submit();
+                // Hentikan interval jika waktu habis
+                if (remainingTime <= 0) {
+                    clearInterval(intervalId);
+                }
+            }, 1000);
         }
-    });
-</script>
+
+        // Panggil fungsi updateTimer saat halaman dimuat
+        window.onload = function() {
+            updateTimer();
+        };
+
+        window.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                // Tab nonaktif, lakukan logout dengan metode POST
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('logout') }}'; // Ganti dengan route logout yang sesuai
+
+                // Tambahkan CSRF token ke dalam form
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}'; // Mendapatkan nilai CSRF token dari Laravel
+
+                form.appendChild(csrfToken);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    </script>
 @endpush
