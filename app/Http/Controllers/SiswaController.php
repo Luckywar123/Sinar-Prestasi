@@ -235,7 +235,10 @@ class SiswaController extends Controller
 
                 continue;
             }
-            $exam_scores += $exam_answer->answer->answer_score;
+
+            if($exam_answer->is_false == 0){
+                $exam_scores += $exam_answer->answer->answer_score;
+            }
         }
 
         $exam->exam_score   = $exam_scores;
