@@ -130,22 +130,25 @@ class GuruController extends Controller
             $token .= $characters[mt_rand(0, $maxIndex)];
         }
 
-        $currentToken = ExamToken::where('user_id', $user_id)->where('status', $status)->first();
+        $exam_token = ExamToken::where('user_id', $user_id)->where('status', $status)->first();
 
-        if (!empty($currentToken)) {
-            ExamToken::destroy($currentToken->exam_token_id);
+        if (!empty($exam_token)) {
+            $exam_token->token = $token;
+            $exam_token->save();
+            $data = $exam_token;
+        }else{
+            $new_token = ExamToken::create([
+                'token'     => $token,
+                'user_id'   => $user_id,
+                'status'    => $status
+            ]);
+            $data = $new_token;
         }
-
-        ExamToken::create([
-            'token'     => $token,
-            'user_id'   => $user_id,
-            'status'    => $status
-        ]);
 
         return response()->json([
             'status'  => "Success",
             'message' => 'Data token',
-            'data'    => $token
+            'data'    => $data
         ], 201);
     }
 
@@ -337,5 +340,10 @@ class GuruController extends Controller
         ];
 
         return view('guru.rekap', ["exams" => $exams, "months" => $months]);
+    }
+
+    public function listDataToken(){
+        $tokens = ExamToken::all();
+        return view('guru.token', ["tokens" => $tokens]);
     }
 }

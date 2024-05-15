@@ -96,5 +96,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('print-statistik', [GuruController::class, 'printStatistik'])->name('printStatistik');
 
         Route::get('filter-by-month', [GuruController::class, 'filterRecap'])->name('filter-by-month');
+
+        Route::get('list-data-token', [GuruController::class, 'listDataToken'])->name('listDataToken');
     });
 });

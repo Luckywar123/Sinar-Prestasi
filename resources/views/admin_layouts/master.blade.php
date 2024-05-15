@@ -13,6 +13,7 @@
     <!-- Custom CSS -->
     @include('admin_layouts.style')
     @yield('style')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -71,44 +72,7 @@
         // Panggil fungsi setActiveLink() setiap kali halaman dimuat
         window.onload = function() {
             setActiveLink();
-
-            fetch('{{ route("getToken") }}', {
-                method: 'GET',
-            })
-            .then(response => response.json())
-            .then(data => {
-                const tokens = data.data; // Ambil semua data token
-                tokens.forEach(token => {
-                    const tokenElement = document.getElementById(`token-${token.status}`);
-                    if (tokenElement) {
-                        tokenElement.innerHTML = `Token ${token.status}: ${token.token}`;
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
         };
-
-        function regenerateToken(status, elementId) {
-            fetch('{{ route("generateToken") }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ status: status })
-            })
-            .then(response => response.json())
-            .then(data => {
-                var tokenElement = document.getElementById(elementId);
-                tokenElement.innerHTML = `Token ${status}: ${data.data}`;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
     </script>
 
     @stack('scripts')
