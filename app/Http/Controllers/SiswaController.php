@@ -449,7 +449,7 @@ class SiswaController extends Controller
                         $questionsPerCategory = Question::inRandomOrder()
                             ->where('exam_type', $exam_type)
                             ->where('category', $category)
-                            ->whereNotIn('question_id', $answeredQuestionIds)
+                            // ->whereNotIn('question_id', $answeredQuestionIds)
                             ->limit($limit)
                             ->get();
 
